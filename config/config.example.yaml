@@ -1,0 +1,38 @@
+# Context7 Local Configuration Example
+
+server:
+  # Server host (localhost for local access, 0.0.0.0 for network access)
+  host: localhost
+  
+  # Server port (only used for HTTP/SSE transport)
+  port: 8080
+  
+  # Transport type: stdio, http, sse
+  # - stdio: Standard input/output (recommended for MCP clients)
+  # - http: HTTP REST API
+  # - sse: Server-Sent Events for streaming
+  transport: stdio
+
+storage:
+  # Directory to store library data and index
+  dataDir: ~/.context7local/data
+  
+  # Maximum number of libraries to store
+  maxLibraries: 1000
+  
+  # Maximum size for documentation (in bytes, 10MB default)
+  maxDocSize: 10485760
+
+security:
+  # Enable API key authentication (recommended for HTTP/SSE)
+  enableAuth: false
+  
+  # API keys for authentication (if enableAuth is true)
+  apiKeys: 
+    - "your-api-key-here"
+    - "another-api-key"
+  
+  # Allowed IP addresses (if enableAuth is true)
+  allowedIps:
+    - "127.0.0.1"
+    - "192.168.1.0/24"
