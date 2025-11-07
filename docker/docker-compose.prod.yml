@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  opencontext7:
+    image: opencontext7:latest
+    container_name: opencontext7-prod
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - opencontext7-config:/config
+      - opencontext7-data:/data
+      - /etc/localtime:/etc/localtime:ro  # 同步主机时间
+    environment:
+      - OPENCONTEXT7_TRANSPORT=http
+      - OPENCONTEXT7_ENABLE_AUTH=true  # 生产环境启用认证
+      - OPENCONTEXT7_API_KEYS=${OPENCONTEXT7_API_KEYS}  # 从环境变量获取API密钥
+      - OPENCONTEXT7_ALLOWED_IPS=${OPENCONTEXT7_ALLOWED_IPS:-0.0.0.0/0}  # 从环境变量获取允许的IP
+      - OPENCONTEXT7_GIT_AUTOSYNC=true  # 启用Git自动同步
+      - OPENCONTEXT7_GIT_SYNC_MINUTES=${OPENCONTEXT7_GIT_SYNC_MINUTES:-60}  # 同步间隔
+      - OPENCONTEXT7_ENABLE_BACKUPS=true  # 启用备份
+      - OPENCONTEXT7_BACKUP_DIR=/data/backups
+      - OPENCONTEXT7_MULTI_USER=true  # 启用多用户
+      - OPENCONTEXT7_USERS_FILE=/config/users.yaml
+      - OPENCONTEXT7_ROLES_FILE=/config/roles.yaml
+    networks:
+      - opencontext7-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    read_only: true  # 只读文件系统，提高安全性
+    tmpfs:
+      - /tmp  # 临时目录使用tmpfs
+      - /var/tmp  # 临时目录使用tmpfs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:

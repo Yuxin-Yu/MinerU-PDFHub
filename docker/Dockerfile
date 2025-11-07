@@ -1,16 +1,23 @@
 # syntax=docker/dockerfile:1
 
-ARG NIM_VERSION=2.2.4
+ARG NIM_VERSION=2.2.6-ubuntu-slim
 FROM nimlang/nim:${NIM_VERSION} AS builder
 
 WORKDIR /app
 
+# 安装nimble和git（如果使用slim镜像）
+RUN apt-get update && apt-get install -y curl git && \
+    curl -L https://github.com/nim-lang/nimble/releases/download/v0.20.1/nimble-linux_x64.tar.gz -o nimble.tar.gz && \
+    tar -xzf nimble.tar.gz && \
+    mv nimble /usr/local/bin/ && \
+    rm -rf nimble.tar.gz
+
 # Pre-copy the Nimble manifest to leverage Docker layer caching for dependencies
-COPY opencontext7.nimble nim.cfg ./
-COPY vendor ./vendor
+COPY ../opencontext7.nimble ../nim.cfg ./
+COPY ../vendor ./vendor
 RUN nimble refresh && nimble install -y --depsOnly
 
-COPY . .
+COPY .. .
 RUN nim c -d:release --opt:size --passC:-flto --passL:-s \
     --nimcache:/tmp/nimcache -o:/app/opencontext7 src/opencontext7.nim && \
     rm -rf /tmp/nimcache
@@ -25,8 +32,8 @@ ARG APP_GID=1000
 
 LABEL org.opencontainers.image.title="OpenContext7" \
       org.opencontainers.image.description="On-premises MCP server for private/internal documentation." \
-      org.opencontainers.image.url="https://github.com/jasagiri/mcp-context7local" \
-      org.opencontainers.image.source="https://github.com/jasagiri/mcp-context7local" \
+      org.opencontainers.image.url="https://github.com/Yuxin-Yu/mcp-opencontext7" \
+      org.opencontainers.image.source="https://github.com/Yuxin-Yu/mcp-opencontext7" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.revision="${VCS_REF}" \
       org.opencontainers.image.created="${BUILD_DATE}" \
@@ -49,7 +56,7 @@ ENV OPENCONTEXT7_CONFIG_DIR=/config \
 WORKDIR /app
 
 COPY --from=builder --chown=opencontext7:opencontext7 /app/opencontext7 /usr/local/bin/opencontext7
-COPY --chown=opencontext7:opencontext7 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --chown=opencontext7:opencontext7 docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 VOLUME ["/config", "/data"]
