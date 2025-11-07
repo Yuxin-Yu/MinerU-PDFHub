@@ -6,7 +6,7 @@ import unittest, asyncdispatch, times, os, json, strutils
 import ../src/[library_manager, config_manager, cli, mcp_helpers]
 
 suite "Integration Tests":
-  let testDataDir = "/tmp/context7local_integration_test"
+  let testDataDir = "/tmp/opencontext7_integration_test"
   let testConfigPath = testDataDir / "config.yaml"
   
   setup:
@@ -323,7 +323,7 @@ suite "Integration Tests":
         "name": lib.name,
         "version": lib.version,
         "description": lib.description,
-        "registeredAt": lib.registeredAt
+        "registeredAt": lib.registeredAt.toTime().toUnix()
       })
     
     let searchResponse = createToolSuccessResult($jsonResults)

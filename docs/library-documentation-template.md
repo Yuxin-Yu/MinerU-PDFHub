@@ -2,7 +2,7 @@
 
 ## 基本構造
 
-context7localに登録するMarkdownドキュメントは、以下の構造で作成することを推奨します：
+opencontext7に登録するMarkdownドキュメントは、以下の構造で作成することを推奨します：
 
 ```markdown
 # [ライブラリ名] v[バージョン番号]

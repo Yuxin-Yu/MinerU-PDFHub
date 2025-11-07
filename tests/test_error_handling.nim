@@ -6,7 +6,7 @@ import unittest, asyncdispatch, times, os, json, strutils
 import ../src/[library_manager, config_manager]
 
 suite "Error Handling and Boundary Value Tests":
-  let testDataDir = "/tmp/context7local_error_test"
+  let testDataDir = "/tmp/opencontext7_error_test"
   
   setup:
     removeDir(testDataDir)

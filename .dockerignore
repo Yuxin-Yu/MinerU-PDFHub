@@ -1,0 +1,13 @@
+.git
+.github
+nimcache
+.nimcache
+opencontext7
+tests
+examples
+docs/TESTING*.md
+docs/generated
+*.log
+*.tmp
+.DS_Store
+node_modules

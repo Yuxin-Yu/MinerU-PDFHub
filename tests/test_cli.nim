@@ -16,7 +16,7 @@ proc commandLineParams(): seq[string] =
   return mockCommandLineParams
 
 suite "CLI Comprehensive Tests":
-  let testDataDir = "/tmp/context7local_cli_test"
+  let testDataDir = "/tmp/opencontext7_cli_test"
   let testConfigPath = testDataDir / "config.yaml"
   let testDocsFile = testDataDir / "test_docs.md"
   
@@ -25,9 +25,11 @@ suite "CLI Comprehensive Tests":
     createDir(testDataDir)
     writeFile(testDocsFile, "# Test Documentation\n\nThis is test documentation.")
     setMockCommandLineParams(@[])
+    putEnv("OPENCONTEXT7_SKIP_SERVER", "1")
   
   teardown:
     removeDir(testDataDir)
+    delEnv("OPENCONTEXT7_SKIP_SERVER")
 
   test "Show usage":
     # Test the individual functions directly

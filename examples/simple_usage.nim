@@ -1,12 +1,12 @@
 ##[
-  Simple usage example for Context7 Local
+  Simple usage example for OpenContext7
 ]##
 
 import std/[asyncdispatch, json]
 import ../src/[library_manager, config_manager]
 
 proc main() {.async.} =
-  echo "Context7 Local - Simple Usage Example"
+  echo "OpenContext7 - Simple Usage Example"
   echo "======================================"
   
   # Initialize manager

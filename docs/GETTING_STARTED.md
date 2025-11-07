@@ -1,6 +1,6 @@
-# Getting Started with Context7 Local
+# Getting Started with OpenContext7
 
-This guide will help you set up and start using Context7 Local for managing your private library documentation.
+This guide will help you set up and start using OpenContext7 for managing your private library documentation.
 
 ## Prerequisites
 
@@ -12,8 +12,8 @@ This guide will help you set up and start using Context7 Local for managing your
 
 ### Option A: From Source
 ```bash
-git clone https://github.com/jasagiri/nim-context7local.git
-cd nim-context7local
+git clone https://github.com/jasagiri/nim-opencontext7.git
+cd nim-opencontext7
 nimble install
 nimble build
 ```
@@ -25,13 +25,13 @@ Download the latest release from the releases page and extract it to your prefer
 
 1. **Initialize configuration:**
    ```bash
-   ./context7local init
+   ./opencontext7 init
    ```
-   This creates `~/.context7local/config.yaml` with default settings.
+   This creates `~/.opencontext7/config.yaml` with default settings.
 
 2. **Verify installation:**
    ```bash
-   ./context7local config
+   ./opencontext7 config
    ```
 
 ## Step 3: Register Your First Library
@@ -106,13 +106,13 @@ Let's register documentation for an internal API:
 
 2. **Register the library:**
    ```bash
-   ./context7local register "internal-auth-api" "1.0.0" internal-auth-api.md
+   ./opencontext7 register "internal-auth-api" "1.0.0" internal-auth-api.md
    ```
 
 3. **Verify registration:**
    ```bash
-   ./context7local list
-   ./context7local search "auth"
+   ./opencontext7 list
+   ./opencontext7 search "auth"
    ```
 
 ## Step 4: Configure MCP Client
@@ -124,12 +124,12 @@ Let's register documentation for an internal API:
    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
    - Linux: `~/.config/Claude/claude_desktop_config.json`
 
-2. **Add Context7 Local server:**
+2. **Add OpenContext7 server:**
    ```json
    {
      "mcpServers": {
-       "context7local": {
-         "command": "/path/to/context7local",
+       "opencontext7": {
+         "command": "/path/to/opencontext7",
          "args": ["server"]
        }
      }
@@ -143,8 +143,8 @@ Let's register documentation for an internal API:
 1. **Open Cursor settings**
 2. **Navigate to MCP servers**
 3. **Add new server:**
-   - Name: `context7local`
-   - Command: `/path/to/context7local`
+   - Name: `opencontext7`
+   - Command: `/path/to/opencontext7`
    - Args: `["server"]`
 
 ## Step 5: Test the Integration
@@ -153,11 +153,11 @@ Let's register documentation for an internal API:
 
 2. **Test with a simple prompt:**
    ```
-   I need to implement user authentication in my React app. Can you help me create a login function that uses our internal auth API? use context7local
+   I need to implement user authentication in my React app. Can you help me create a login function that uses our internal auth API? use opencontext7
    ```
 
 3. **The client should automatically:**
-   - Connect to Context7 Local
+   - Connect to OpenContext7
    - Search for authentication-related documentation
    - Provide accurate code examples based on your internal API
 
@@ -167,13 +167,13 @@ Register more of your internal libraries:
 
 ```bash
 # Database library
-./context7local register "internal-db-utils" "2.1.0" db-utils-docs.md
+./opencontext7 register "internal-db-utils" "2.1.0" db-utils-docs.md
 
 # Logging framework
-./context7local register "company-logger" "1.5.2" logger-docs.md
+./opencontext7 register "company-logger" "1.5.2" logger-docs.md
 
 # Common utilities
-./context7local register "shared-utils" "3.0.0" utils-docs.md
+./opencontext7 register "shared-utils" "3.0.0" utils-docs.md
 ```
 
 ## Common Workflows
@@ -182,42 +182,42 @@ Register more of your internal libraries:
 
 1. **Check what's available:**
    ```bash
-   ./context7local list
+   ./opencontext7 list
    ```
 
 2. **Search for specific functionality:**
    ```bash
-   ./context7local search "database"
-   ./context7local search "logging"
+   ./opencontext7 search "database"
+   ./opencontext7 search "logging"
    ```
 
 3. **Get specific documentation:**
    ```bash
-   ./context7local get "internal-auth-api" "1.0.0"
+   ./opencontext7 get "internal-auth-api" "1.0.0"
    ```
 
 ### Managing Updates
 
 1. **Register new version:**
    ```bash
-   ./context7local register "internal-auth-api" "1.1.0" auth-api-v1.1.md
+   ./opencontext7 register "internal-auth-api" "1.1.0" auth-api-v1.1.md
    ```
 
 2. **Delete old version:**
    ```bash
-   ./context7local delete "internal-auth-api" "1.0.0"
+   ./opencontext7 delete "internal-auth-api" "1.0.0"
    ```
 
 ### Backup and Migration
 
 1. **Backup your data:**
    ```bash
-   tar -czf context7local-backup.tar.gz ~/.context7local/
+   tar -czf opencontext7-backup.tar.gz ~/.opencontext7/
    ```
 
 2. **Restore on new machine:**
    ```bash
-   tar -xzf context7local-backup.tar.gz -C ~/
+   tar -xzf opencontext7-backup.tar.gz -C ~/
    ```
 
 ## Best Practices
@@ -249,13 +249,13 @@ Register more of your internal libraries:
 ### Common Issues
 
 1. **MCP client can't connect:**
-   - Check if Context7 Local is running
+   - Check if OpenContext7 is running
    - Verify the path in MCP client config
    - Check server logs for errors
 
 2. **Libraries not found:**
-   - Verify registration with `./context7local list`
-   - Check search terms with `./context7local search`
+   - Verify registration with `./opencontext7 list`
+   - Check search terms with `./opencontext7 search`
    - Ensure proper data directory permissions
 
 3. **Performance issues:**
@@ -267,7 +267,7 @@ Register more of your internal libraries:
 
 - Check the main README for detailed documentation
 - Review configuration options in `config.example.yaml`
-- Run `./context7local --help` for CLI help
+- Run `./opencontext7 --help` for CLI help
 - Check server logs for error details
 
 ## Next Steps

@@ -6,7 +6,7 @@ import unittest, asyncdispatch, times, os, json, options
 import ../src/library_manager
 
 suite "Library Manager Tests":
-  let testDataDir = "/tmp/context7local_test"
+  let testDataDir = "/tmp/opencontext7_test"
   
   setup:
     removeDir(testDataDir)

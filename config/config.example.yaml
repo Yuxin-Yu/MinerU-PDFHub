@@ -1,8 +1,8 @@
-# Context7 Local Configuration Example
+# OpenContext7 Configuration Example
 
 server:
   # Server host (localhost for local access, 0.0.0.0 for network access)
-  host: localhost
+  host: 0.0.0.0
   
   # Server port (only used for HTTP/SSE transport)
   port: 8080
@@ -11,11 +11,11 @@ server:
   # - stdio: Standard input/output (recommended for MCP clients)
   # - http: HTTP REST API
   # - sse: Server-Sent Events for streaming
-  transport: stdio
+  transport: http
 
 storage:
   # Directory to store library data and index
-  dataDir: ~/.context7local/data
+  dataDir: ~/.opencontext7/data
   
   # Maximum number of libraries to store
   maxLibraries: 1000

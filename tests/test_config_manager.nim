@@ -6,15 +6,17 @@ import unittest, os, strutils
 import ../src/config_manager
 
 suite "Config Manager Comprehensive Tests":
-  let testConfigDir = "/tmp/context7local_config_test"
+  let testConfigDir = "/tmp/opencontext7_config_test"
   let testConfigPath = testConfigDir / "test_config.yaml"
   
   setup:
     removeDir(testConfigDir)
     createDir(testConfigDir)
+    putEnv("OPENCONTEXT7_CONFIG", testConfigPath)
   
   teardown:
     removeDir(testConfigDir)
+    delEnv("OPENCONTEXT7_CONFIG")
 
   test "Get default config":
     let config = getDefaultConfig()
@@ -22,7 +24,7 @@ suite "Config Manager Comprehensive Tests":
     check config.server.host == "localhost"
     check config.server.port == 8080
     check config.server.transport == "stdio"
-    check config.storage.dataDir == getHomeDir() / ".context7local" / "data"
+    check config.storage.dataDir == getHomeDir() / ".opencontext7" / "data"
     check config.storage.maxLibraries == 1000
     check config.storage.maxDocSize == 10 * 1024 * 1024
     check config.security.enableAuth == false
@@ -31,7 +33,7 @@ suite "Config Manager Comprehensive Tests":
 
   test "Get config path":
     let path = getConfigPath()
-    check path.endsWith(".context7local/config.yaml")
+    check path == testConfigPath
     check dirExists(path.parentDir())
 
   test "Save and load config":
@@ -72,6 +74,7 @@ suite "Config Manager Comprehensive Tests":
     saveConfig(config)  # Should use default path
     
     let defaultPath = getConfigPath()
+    check defaultPath == testConfigPath
     check fileExists(defaultPath)
 
   test "Load config from non-existent file":
@@ -86,6 +89,7 @@ suite "Config Manager Comprehensive Tests":
     let config = loadConfig()  # Should use default path
     
     let defaultPath = getConfigPath()
+    check defaultPath == testConfigPath
     check fileExists(defaultPath)
     check config.server.host == "localhost"
 
