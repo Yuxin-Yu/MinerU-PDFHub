@@ -12,6 +12,20 @@ const inspectorLoginHtml* = """
   <style>
     :root {
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      /* 主题颜色变量系统 - 深色主题作为默认 */
+      --primary-color: #3b82f6;
+      --primary-hover: #2563eb;
+      --background-primary: #0f172a;
+      --background-secondary: #1e293b;
+      --background-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-tertiary: #94a3b8;
+      --border-color: #475569;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --shadow-color: rgba(0, 0, 0, 0.3);
     }
     * {
       box-sizing: border-box;
@@ -19,30 +33,30 @@ const inspectorLoginHtml* = """
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(circle at top, #1b2447 0%, #0a1026 55%, #040711 100%);
-      color: #f3f6ff;
+      background: var(--background-primary);
+      color: var(--text-primary);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 32px 16px;
     }
     a {
-      color: #9fc6ff;
+      color: var(--primary-color);
       text-decoration: none;
     }
     a:hover {
-      color: #cfe0ff;
+      color: var(--primary-hover);
       text-decoration: underline;
     }
     .auth-shell {
       width: min(420px, 100%);
     }
     .auth-card {
-      background: rgba(10, 15, 32, 0.92);
-      border: 1px solid rgba(94, 138, 255, 0.25);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 24px;
       padding: 36px;
-      box-shadow: 0 30px 70px -42px rgba(32, 78, 210, 0.58);
+      box-shadow: 0 30px 70px -42px var(--shadow-color);
     }
     h1 {
       margin: 0 0 6px;
@@ -51,7 +65,7 @@ const inspectorLoginHtml* = """
     }
     p.subtitle {
       margin: 0 0 24px;
-      color: #a3b1e3;
+      color: var(--text-tertiary);
       font-size: 14px;
     }
     form {
@@ -61,18 +75,19 @@ const inspectorLoginHtml* = """
     }
     label {
       font-size: 13px;
-      color: #c3d0ff;
+      color: var(--text-secondary);
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
     input {
       border-radius: 14px;
-      border: 1px solid rgba(126, 168, 255, 0.35);
-      background: rgba(18, 25, 52, 0.9);
-      color: #f3f6ff;
+      border: 1px solid var(--border-color);
+      background: var(--background-secondary);
+      color: var(--text-primary);
       padding: 12px;
       font-size: 15px;
+      transition: border-color 0.2s ease;
     }
     button {
       border: none;
@@ -80,10 +95,11 @@ const inspectorLoginHtml* = """
       padding: 12px 18px;
       font-size: 15px;
       font-weight: 600;
-      background: linear-gradient(135deg, #5f8cff, #4e6fe3);
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
       color: #fff;
       cursor: pointer;
       margin-top: 8px;
+      transition: opacity 0.2s ease;
     }
     button:disabled {
       opacity: 0.6;
@@ -92,15 +108,15 @@ const inspectorLoginHtml* = """
     .status {
       margin-top: 16px;
       font-size: 13px;
-      color: #a3b1e3;
+      color: var(--text-tertiary);
     }
     .status.error {
-      color: #ffa6b0;
+      color: var(--error-color);
     }
     .links {
       margin-top: 18px;
       font-size: 13px;
-      color: #b7c6ff;
+      color: var(--text-secondary);
       text-align: center;
     }
     body.loading button {
@@ -108,44 +124,27 @@ const inspectorLoginHtml* = """
       pointer-events: none;
     }
     body.light-theme {
+      /* 浅色主题颜色变量 */
+      --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
+      --background-primary: #f8fafc;
+      --background-secondary: #f1f5f9;
+      --background-tertiary: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-tertiary: #64748b;
+      --border-color: #cbd5e1;
+      --success-color: #059669;
+      --error-color: #dc2626;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --shadow-color: rgba(0, 0, 0, 0.1);
       color-scheme: light;
-      background: radial-gradient(circle at top, #f9fbff 0%, #e8edff 55%, #dde5ff 100%);
-      color: #1f2436;
+      background: var(--background-primary);
+      color: var(--text-primary);
     }
-    body.light-theme .auth-card {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(145, 165, 255, 0.35);
-      box-shadow: 0 24px 60px -38px rgba(120, 150, 255, 0.35);
-    }
-    body.light-theme p.subtitle {
-      color: #5c6a8b;
-    }
-    body.light-theme label {
-      color: #2f3d66;
-    }
-    body.light-theme input {
-      background: #f6f8ff;
-      border: 1px solid rgba(145, 165, 255, 0.45);
-      color: #1f2436;
-    }
+    /* 浅色主题特定调整（大部分样式已通过CSS变量处理） */
     body.light-theme input::placeholder {
-      color: #93a3d8;
-    }
-    body.light-theme a {
-      color: #2d4ccb;
-    }
-    body.light-theme a:hover {
-      color: #22379f;
-    }
-    body.light-theme .links {
-      color: #3d4f85;
-    }
-    body.light-theme .status {
-      color: #4b5a7e;
-    }
-    body.light-theme button {
-      background: linear-gradient(135deg, #4e6fe3, #7d94ff);
-      color: #fff;
+      color: var(--text-tertiary);
     }
   </style>
 </head>
@@ -202,7 +201,7 @@ const inspectorLoginHtml* = """
     if (existingToken && existingToken.trim().length > 0) {
       window.location.replace("/ui/app");
     }
-
+    
     function setStatus(message, isError = false) {
       statusEl.textContent = message;
       statusEl.classList.toggle("error", isError);
@@ -285,11 +284,11 @@ const inspectorRegisterHtml* = """
       padding: 32px 16px;
     }
     a {
-      color: #9fc6ff;
+      color: var(--primary-color);
       text-decoration: none;
     }
     a:hover {
-      color: #cfe0ff;
+      color: var(--primary-hover);
       text-decoration: underline;
     }
     .auth-shell {
@@ -526,6 +525,20 @@ const inspectorUiHtml* = """
     :root {
       color-scheme: dark;
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      /* 主题颜色变量系统 - 深色主题作为默认 */
+      --primary-color: #3b82f6;
+      --primary-hover: #2563eb;
+      --background-primary: #0f172a;
+      --background-secondary: #1e293b;
+      --background-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-tertiary: #94a3b8;
+      --border-color: #475569;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --shadow-color: rgba(0, 0, 0, 0.3);
     }
     * {
       box-sizing: border-box;
@@ -533,8 +546,8 @@ const inspectorUiHtml* = """
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(circle at top, #1b2447 0%, #0a1026 55%, #040711 100%);
-      color: #f3f6ff;
+      background: var(--background-primary);
+      color: var(--text-primary);
     }
     a {
       color: #9fc6ff;
@@ -551,21 +564,26 @@ const inspectorUiHtml* = """
       display: grid;
       grid-template-columns: 280px minmax(0, 1fr) 340px;
       grid-template-areas: "sidebar main results";
-      gap: 24px;
+      gap: 28px;
       align-items: start;
     }
     .panel {
-      background: rgba(10, 15, 32, 0.88);
-      border: 1px solid rgba(94, 138, 255, 0.2);
-      border-radius: 20px;
-      padding: 24px 26px;
-      box-shadow: 0 30px 70px -42px rgba(32, 78, 210, 0.58);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 28px 30px;
+      box-shadow: 0 32px 75px -45px var(--shadow-color);
+      transition: all 0.3s ease;
+    }
+    .panel:hover {
+      box-shadow: 0 35px 80px -40px var(--shadow-color);
+      transform: translateY(-2px);
     }
     .sidebar {
       grid-area: sidebar;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 22px;
       position: sticky;
       top: 32px;
       align-self: start;
@@ -573,19 +591,20 @@ const inspectorUiHtml* = """
     .brand-card {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
     .brand-card h1 {
       margin: 0;
-      font-size: 26px;
-      font-weight: 650;
-      letter-spacing: 0.5px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
     }
     .brand-card p {
       margin: 0;
-      font-size: 13px;
-      color: #a3b1e3;
-      line-height: 1.5;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.6;
     }
     .badge {
       display: inline-flex;
@@ -593,11 +612,11 @@ const inspectorUiHtml* = """
       gap: 8px;
       padding: 6px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(126, 168, 255, 0.38);
-      background: linear-gradient(135deg, rgba(68, 108, 255, 0.35), rgba(31, 58, 150, 0.45));
+      border: 1px solid var(--border-color);
+      background: var(--background-tertiary);
       font-size: 12px;
       letter-spacing: 0.3px;
-      color: #d5e3ff;
+      color: var(--text-secondary);
       width: fit-content;
     }
     .connection-chip {
@@ -606,60 +625,79 @@ const inspectorUiHtml* = """
       gap: 10px;
       padding: 10px 16px;
       border-radius: 14px;
-      border: 1px solid rgba(126, 168, 255, 0.45);
-      background: rgba(37, 58, 128, 0.42);
+      border: 1px solid var(--border-color);
+      background: var(--background-secondary);
       font-size: 13px;
-      color: #dceaff;
+      color: var(--text-secondary);
     }
     .connection-dot {
       width: 9px;
       height: 9px;
       border-radius: 50%;
-      background: #5dff8f;
-      box-shadow: 0 0 10px rgba(93, 255, 143, 0.7);
+      background: var(--success-color);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
     }
     .session-card h2,
     .links-card h2 {
       margin: 0;
       font-size: 17px;
       font-weight: 620;
+      color: var(--text-primary);
     }
     .session-card p,
     .links-card p {
       margin: 6px 0 0;
       font-size: 13px;
-      color: #9aa8da;
+      color: var(--text-tertiary);
       line-height: 1.5;
     }
     .quick-links {
       list-style: none;
       padding: 0;
-      margin: 14px 0 0;
+      margin: 16px 0 0;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     .quick-links a {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: rgba(22, 31, 64, 0.7);
-      border: 1px solid rgba(80, 120, 210, 0.2);
-      font-size: 13px;
-      color: #c6d4ff;
-      transition: border-color 0.15s ease, background 0.15s ease;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
     .quick-links a:hover {
-      border-color: rgba(126, 168, 255, 0.45);
-      background: rgba(42, 62, 132, 0.72);
+      border-color: var(--primary-color);
+      background: var(--background-secondary);
+      color: var(--primary-color);
+      transform: translateX(4px);
+    }
+    .quick-links a::before {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.3s ease;
+    }
+    .quick-links a:hover::before {
+      left: 100%;
     }
     .main {
       grid-area: main;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 28px;
     }
     .results-panel {
       grid-area: results;
@@ -912,32 +950,39 @@ const inspectorUiHtml* = """
     label {
       font-size: 13px;
       font-weight: 500;
-      color: #d0daf7;
+      color: var(--text-secondary);
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
     input, textarea, select {
       width: 100%;
-      border-radius: 10px;
-      border: 1px solid rgba(86, 123, 215, 0.25);
-      background: rgba(9, 15, 28, 0.65);
-      color: #f4f7ff;
-      font-size: 14px;
-      padding: 10px 12px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      font-size: 15px;
+      padding: 12px 16px;
+      transition: all 0.25s ease;
       font-family: inherit;
       resize: vertical;
-      min-height: 42px;
+      min-height: 48px;
+      position: relative;
+      overflow: hidden;
     }
     textarea {
       min-height: 120px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: rgba(103, 161, 255, 0.8);
-      box-shadow: 0 0 0 3px rgba(103, 161, 255, 0.2);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+      transform: translateY(-1px);
+    }
+    input::placeholder, textarea::placeholder {
+      color: var(--text-tertiary);
+      opacity: 0.8;
     }
     .inline-inputs {
       display: flex;
@@ -969,27 +1014,55 @@ const inspectorUiHtml* = """
     button {
       flex: 1;
       min-width: 120px;
-      background: linear-gradient(130deg, #4665ff, #8c9eff);
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
       border: none;
-      border-radius: 10px;
-      padding: 11px 14px;
+      border-radius: 16px;
+      padding: 12px 18px;
       color: #fff;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.3px;
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.2s ease;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    button::before {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.35s ease;
     }
     button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 30px -18px rgba(101, 149, 255, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px -24px rgba(101, 149, 255, 0.9);
+    }
+    button:hover::before {
+      left: 100%;
     }
     button:active {
       transform: translateY(0);
+      box-shadow: 0 8px 24px -18px rgba(101, 149, 255, 0.8);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
     button.secondary {
-      background: rgba(34, 52, 108, 0.78);
-      border: 1px solid rgba(90, 146, 255, 0.32);
+      background: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+    button.secondary:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: 0 12px 30px -20px rgba(101, 149, 255, 0.6);
     }
     .download-link {
       display: inline-flex;
@@ -1158,8 +1231,22 @@ const inspectorUiHtml* = """
       to { opacity: 1; transform: translateY(0); }
     }
     body.light-theme {
-      color: #1f2436;
-      background: radial-gradient(circle at top, #f8faff 0%, #e7ecff 55%, #dde4ff 100%);
+      /* 浅色主题颜色变量 */
+      --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
+      --background-primary: #f8fafc;
+      --background-secondary: #f1f5f9;
+      --background-tertiary: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-tertiary: #64748b;
+      --border-color: #cbd5e1;
+      --success-color: #059669;
+      --error-color: #dc2626;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      color: var(--text-primary);
+      background: var(--background-primary);
     }
     body.light-theme .panel {
       background: rgba(255, 255, 255, 0.95);
@@ -1684,7 +1771,8 @@ const inspectorUiHtml* = """
     const settingsToggle = document.getElementById("settingsToggle");
     const settingsPopover = document.getElementById("settingsPopover");
     const settingsWrapper = settingsPopover ? settingsPopover.parentElement : null;
-    const themeChoiceRadios = settingsPopover ? settingsPopover.querySelectorAll("input[name='themeChoice']") : [];
+    // 重命名变量以避免冲突
+    const themeRadios = settingsPopover ? settingsPopover.querySelectorAll("input[name='themeChoice']") : [];
     const settingsAccountRow = document.getElementById("settingsAccountRow");
     const settingsUserSelect = document.getElementById("settingsUserSelect");
     const settingsRoleSelect = document.getElementById("settingsRoleSelect");
@@ -1794,6 +1882,8 @@ const inspectorUiHtml* = """
       refreshSettingsSelections();
     }
 
+
+    
     function refreshSettingsSelections() {
       if (!settingsAccountRow) return;
       const isAdmin = currentUserIsAdmin;
@@ -1830,8 +1920,8 @@ const inspectorUiHtml* = """
       if (persist) {
         localStorage.setItem(themeStorageKey, normalized);
       }
-      if (themeChoiceRadios && themeChoiceRadios.length > 0) {
-        themeChoiceRadios.forEach(radio => {
+      if (themeRadios && themeRadios.length > 0) {
+        themeRadios.forEach(radio => {
           radio.checked = radio.value === normalized;
         });
       }
@@ -2296,8 +2386,8 @@ const inspectorUiHtml* = """
       apiKeyInput.value = normalizeToken(storedToken);
     }
 
-    if (themeChoiceRadios && themeChoiceRadios.length > 0) {
-      themeChoiceRadios.forEach(radio => {
+    if (themeRadios && themeRadios.length > 0) {
+      themeRadios.forEach(radio => {
         radio.addEventListener("change", event => {
           const target = event.currentTarget;
           if (target instanceof HTMLInputElement && target.checked) {
