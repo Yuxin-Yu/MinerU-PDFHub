@@ -15,8 +15,11 @@ proc setMockCommandLineParams(params: seq[string]) =
 proc commandLineParams(): seq[string] =
   return mockCommandLineParams
 
+proc parseCLI(): Future[void] =
+  cli.parseCLI(mockCommandLineParams)
+
 suite "CLI Comprehensive Tests":
-  let testDataDir = "/tmp/opencontext7_cli_test"
+  let testDataDir = "/tmp/mineru_pdfhub_cli_test"
   let testConfigPath = testDataDir / "config.yaml"
   let testDocsFile = testDataDir / "test_docs.md"
   
@@ -25,11 +28,11 @@ suite "CLI Comprehensive Tests":
     createDir(testDataDir)
     writeFile(testDocsFile, "# Test Documentation\n\nThis is test documentation.")
     setMockCommandLineParams(@[])
-    putEnv("OPENCONTEXT7_SKIP_SERVER", "1")
+    putEnv("MINERU_PDFHUB_SKIP_SERVER", "1")
   
   teardown:
     removeDir(testDataDir)
-    delEnv("OPENCONTEXT7_SKIP_SERVER")
+    delEnv("MINERU_PDFHUB_SKIP_SERVER")
 
   test "Show usage":
     # Test the individual functions directly
@@ -92,7 +95,7 @@ suite "CLI Comprehensive Tests":
   test "Register library without enough arguments":
     # This would be handled by argument parsing in parseCLI
     # We test that the function requires the correct parameters
-    expect(AssertionError):
+    expect(ValueError):
       waitFor registerLibrary("", "", "", testDataDir)
 
   test "Search libraries":

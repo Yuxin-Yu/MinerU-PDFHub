@@ -1,6 +1,6 @@
-# Getting Started with OpenContext7
+# Getting Started with MinerU-PDFHub
 
-This guide will help you set up and start using OpenContext7 for managing your private library documentation.
+This guide will help you set up and start using MinerU-PDFHub for managing your private library documentation.
 
 ## Prerequisites
 
@@ -12,8 +12,8 @@ This guide will help you set up and start using OpenContext7 for managing your p
 
 ### Option A: From Source
 ```bash
-git clone https://github.com/jasagiri/nim-opencontext7.git
-cd nim-opencontext7
+git clone https://github.com/jasagiri/nim-mineru-pdfhub.git
+cd nim-mineru-pdfhub
 nimble install
 nimble build
 ```
@@ -25,13 +25,13 @@ Download the latest release from the releases page and extract it to your prefer
 
 1. **Initialize configuration:**
    ```bash
-   ./opencontext7 init
+   ./mineru-pdfhub init
    ```
-   This creates `~/.opencontext7/config.yaml` with default settings.
+   This creates `~/.mineru-pdfhub/config.yaml` with default settings.
 
 2. **Verify installation:**
    ```bash
-   ./opencontext7 config
+   ./mineru-pdfhub config
    ```
 
 ## Step 3: Register Your First Library
@@ -106,13 +106,13 @@ Let's register documentation for an internal API:
 
 2. **Register the library:**
    ```bash
-   ./opencontext7 register "internal-auth-api" "1.0.0" internal-auth-api.md
+   ./mineru-pdfhub register "internal-auth-api" "1.0.0" internal-auth-api.md
    ```
 
 3. **Verify registration:**
    ```bash
-   ./opencontext7 list
-   ./opencontext7 search "auth"
+   ./mineru-pdfhub list
+   ./mineru-pdfhub search "auth"
    ```
 
 ## Step 4: Configure MCP Client
@@ -124,12 +124,12 @@ Let's register documentation for an internal API:
    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
    - Linux: `~/.config/Claude/claude_desktop_config.json`
 
-2. **Add OpenContext7 server:**
+2. **Add MinerU-PDFHub server:**
    ```json
    {
      "mcpServers": {
-       "opencontext7": {
-         "command": "/path/to/opencontext7",
+       "mineru-pdfhub": {
+         "command": "/path/to/mineru-pdfhub",
          "args": ["server"]
        }
      }
@@ -143,8 +143,8 @@ Let's register documentation for an internal API:
 1. **Open Cursor settings**
 2. **Navigate to MCP servers**
 3. **Add new server:**
-   - Name: `opencontext7`
-   - Command: `/path/to/opencontext7`
+   - Name: `mineru-pdfhub`
+   - Command: `/path/to/mineru-pdfhub`
    - Args: `["server"]`
 
 ## Step 5: Test the Integration
@@ -153,11 +153,11 @@ Let's register documentation for an internal API:
 
 2. **Test with a simple prompt:**
    ```
-   I need to implement user authentication in my React app. Can you help me create a login function that uses our internal auth API? use opencontext7
+   I need to implement user authentication in my React app. Can you help me create a login function that uses our internal auth API? use mineru-pdfhub
    ```
 
 3. **The client should automatically:**
-   - Connect to OpenContext7
+   - Connect to MinerU-PDFHub
    - Search for authentication-related documentation
    - Provide accurate code examples based on your internal API
 
@@ -167,13 +167,13 @@ Register more of your internal libraries:
 
 ```bash
 # Database library
-./opencontext7 register "internal-db-utils" "2.1.0" db-utils-docs.md
+./mineru-pdfhub register "internal-db-utils" "2.1.0" db-utils-docs.md
 
 # Logging framework
-./opencontext7 register "company-logger" "1.5.2" logger-docs.md
+./mineru-pdfhub register "company-logger" "1.5.2" logger-docs.md
 
 # Common utilities
-./opencontext7 register "shared-utils" "3.0.0" utils-docs.md
+./mineru-pdfhub register "shared-utils" "3.0.0" utils-docs.md
 ```
 
 ## Common Workflows
@@ -182,42 +182,42 @@ Register more of your internal libraries:
 
 1. **Check what's available:**
    ```bash
-   ./opencontext7 list
+   ./mineru-pdfhub list
    ```
 
 2. **Search for specific functionality:**
    ```bash
-   ./opencontext7 search "database"
-   ./opencontext7 search "logging"
+   ./mineru-pdfhub search "database"
+   ./mineru-pdfhub search "logging"
    ```
 
 3. **Get specific documentation:**
    ```bash
-   ./opencontext7 get "internal-auth-api" "1.0.0"
+   ./mineru-pdfhub get "internal-auth-api" "1.0.0"
    ```
 
 ### Managing Updates
 
 1. **Register new version:**
    ```bash
-   ./opencontext7 register "internal-auth-api" "1.1.0" auth-api-v1.1.md
+   ./mineru-pdfhub register "internal-auth-api" "1.1.0" auth-api-v1.1.md
    ```
 
 2. **Delete old version:**
    ```bash
-   ./opencontext7 delete "internal-auth-api" "1.0.0"
+   ./mineru-pdfhub delete "internal-auth-api" "1.0.0"
    ```
 
 ### Backup and Migration
 
 1. **Backup your data:**
    ```bash
-   tar -czf opencontext7-backup.tar.gz ~/.opencontext7/
+   tar -czf mineru-pdfhub-backup.tar.gz ~/.mineru-pdfhub/
    ```
 
 2. **Restore on new machine:**
    ```bash
-   tar -xzf opencontext7-backup.tar.gz -C ~/
+   tar -xzf mineru-pdfhub-backup.tar.gz -C ~/
    ```
 
 ## Best Practices
@@ -249,13 +249,13 @@ Register more of your internal libraries:
 ### Common Issues
 
 1. **MCP client can't connect:**
-   - Check if OpenContext7 is running
+   - Check if MinerU-PDFHub is running
    - Verify the path in MCP client config
    - Check server logs for errors
 
 2. **Libraries not found:**
-   - Verify registration with `./opencontext7 list`
-   - Check search terms with `./opencontext7 search`
+   - Verify registration with `./mineru-pdfhub list`
+   - Check search terms with `./mineru-pdfhub search`
    - Ensure proper data directory permissions
 
 3. **Performance issues:**
@@ -267,7 +267,7 @@ Register more of your internal libraries:
 
 - Check the main README for detailed documentation
 - Review configuration options in `config.example.yaml`
-- Run `./opencontext7 --help` for CLI help
+- Run `./mineru-pdfhub --help` for CLI help
 - Check server logs for error details
 
 ## Next Steps

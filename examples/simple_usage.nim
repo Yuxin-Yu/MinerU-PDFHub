@@ -1,12 +1,12 @@
 ##[
-  Simple usage example for OpenContext7
+  Simple usage example for MinerU-PDFHub
 ]##
 
 import std/[asyncdispatch, json]
 import ../src/[library_manager, config_manager]
 
 proc main() {.async.} =
-  echo "OpenContext7 - Simple Usage Example"
+  echo "MinerU-PDFHub - Simple Usage Example"
   echo "======================================"
   
   # Initialize manager

@@ -1,5 +1,5 @@
 ##[
-  Embedded UI assets for the OpenContext7 Inspector
+  Embedded UI assets for the MinerU-PDFHub Inspector
 ]##
 
 const inspectorLoginHtml* = """
@@ -8,7 +8,7 @@ const inspectorLoginHtml* = """
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenContext7 Sign In</title>
+  <title>MinerU-PDFHub Sign In</title>
   <style>
     :root {
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -151,7 +151,7 @@ const inspectorLoginHtml* = """
 <body class="dark-theme">
   <div class="auth-shell">
     <section class="auth-card">
-      <h1>OpenContext7</h1>
+      <h1>MinerU-PDFHub</h1>
       <p class="subtitle">Sign in to access the local MCP console.</p>
       <form id="loginForm">
         <label>
@@ -172,8 +172,8 @@ const inspectorLoginHtml* = """
     </section>
   </div>
   <script>
-    const tokenStorageKey = "opencontext7.authToken";
-    const themeStorageKey = "opencontext7.theme";
+    const tokenStorageKey = "mineru-pdfhub.authToken";
+    const themeStorageKey = "mineru-pdfhub.theme";
     const form = document.getElementById("loginForm");
     const usernameField = document.getElementById("loginUsername");
     const passwordField = document.getElementById("loginPassword");
@@ -265,7 +265,7 @@ const inspectorRegisterHtml* = """
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenContext7 Register</title>
+  <title>MinerU-PDFHub Register</title>
   <style>
     :root {
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -434,8 +434,8 @@ const inspectorRegisterHtml* = """
     </section>
   </div>
   <script>
-    const tokenStorageKey = "opencontext7.authToken";
-    const themeStorageKey = "opencontext7.theme";
+    const tokenStorageKey = "mineru-pdfhub.authToken";
+    const themeStorageKey = "mineru-pdfhub.theme";
     const form = document.getElementById("registerForm");
     const usernameField = document.getElementById("registerUsername");
     const passwordField = document.getElementById("registerPassword");
@@ -520,7 +520,7 @@ const inspectorUiHtml* = """
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenContext7 Inspector</title>
+  <title>MinerU-PDFHub Inspector</title>
   <style>
     :root {
       color-scheme: dark;
@@ -1571,7 +1571,7 @@ const inspectorUiHtml* = """
     <aside class="sidebar">
       <section class="panel brand-card">
         <span class="badge">Local MCP Surface</span>
-        <h1>OpenContext7</h1>
+        <h1>MinerU-PDFHub</h1>
         <p>Control and inspect your private library workspace directly from the browser.</p>
         <div class="connection-chip" id="connectionChip">
           <span class="connection-dot"></span>
@@ -1783,8 +1783,8 @@ const inspectorUiHtml* = """
     const registerSection = document.querySelector("[data-admin-section='register']");
     const registerAdminHint = document.getElementById("registerAdminHint");
 
-    const tokenStorageKey = "opencontext7.authToken";
-    const themeStorageKey = "opencontext7.theme";
+    const tokenStorageKey = "mineru-pdfhub.authToken";
+    const themeStorageKey = "mineru-pdfhub.theme";
     let serverInfo = null;
     let currentUserIsAdmin = false;
     let currentUsername = "";

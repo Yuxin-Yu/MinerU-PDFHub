@@ -1,6 +1,6 @@
-# OpenContext7 测试指南
+# MinerU-PDFHub 测试指南
 
-本文档概述了 OpenContext7 的测试策略与执行方式，帮助你在本地或 CI 环境中验证功能完整性。
+本文档概述了 MinerU-PDFHub 的测试策略与执行方式，帮助你在本地或 CI 环境中验证功能完整性。
 
 ## 1. 测试分类
 
@@ -17,7 +17,7 @@
 nimble test
 ```
 
-`nimble test` 会编译并运行 `tests/test_all.nim`，该入口会依次调用所有单测与集成测试文件。执行过程中会设置 `OPENCONTEXT7_SKIP_SERVER=1`，避免真实服务器阻塞控制台。
+`nimble test` 会编译并运行 `tests/test_all.nim`，该入口会依次调用所有单测与集成测试文件。执行过程中会设置 `MINERU_PDFHUB_SKIP_SERVER=1`，避免真实服务器阻塞控制台。
 
 ## 3. 常用测试任务
 
@@ -33,7 +33,7 @@ nimble test
 ```bash
 nim c -r tests/test_library_manager.nim
 nim c -r tests/test_config_manager.nim
-nim c -r tests/test_opencontext7_server.nim
+nim c -r tests/test_mineru_pdfhub_server.nim
 ```
 
 如需对 HTTP/SSE 传输进行专项验证，可运行：
@@ -42,7 +42,7 @@ nim c -r tests/test_opencontext7_server.nim
 nim c -r tests/test_transport_modes.nim
 ```
 
-测试会在 `/tmp/opencontext7_*_test` 下生成临时目录，执行结束后会自动清理。
+测试会在 `/tmp/mineru_pdfhub_*_test` 下生成临时目录，执行结束后会自动清理。
 
 ## 5. CI 建议
 
@@ -54,7 +54,7 @@ nim c -r tests/test_transport_modes.nim
 
 - 使用 `nim c --stackTrace:on --lineTrace:on` 可快速定位 panic 堆栈。
 - 遇到端口占用时，将 `tests/config/test_config.yaml` 中的端口调整为未占用的值。
-- 若 Git 同步测试过慢，可设置环境变量 `OPENCONTEXT7_GIT_BOOTSTRAP=false` 以跳过初始 clone。
+- 若 Git 同步测试过慢，可设置环境变量 `MINERU_PDFHUB_GIT_BOOTSTRAP=false` 以跳过初始 clone。
 
 ## 7. 预期结果
 

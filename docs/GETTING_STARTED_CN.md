@@ -1,12 +1,12 @@
-# OpenContext7 入门指南
+# MinerU-PDFHub 入门指南
 
-本指南将帮助你快速搭建并使用 **OpenContext7** 管理私有文档库。它涵盖安装、初始化配置、常用 CLI 命令，以及如何启用 Web UI。
+本指南将帮助你快速搭建并使用 **MinerU-PDFHub** 管理私有文档库。它涵盖安装、初始化配置、常用 CLI 命令，以及如何启用 Web UI。
 
 ## 1. 克隆仓库
 
 ```bash
-git clone https://github.com/yourorg/opencontext7.git
-cd opencontext7
+git clone https://github.com/yourorg/mineru-pdfhub.git
+cd mineru-pdfhub
 ```
 
 ## 2. 初始化配置
@@ -14,15 +14,15 @@ cd opencontext7
 首次运行前需要初始化配置文件：
 
 ```bash
-./opencontext7 init
+./mineru-pdfhub init
 ```
 
-命令会在 `~/.opencontext7/config.yaml` 下生成默认配置，并创建 `data`、`backups` 等目录。
+命令会在 `~/.mineru-pdfhub/config.yaml` 下生成默认配置，并创建 `data`、`backups` 等目录。
 
 ## 3. 启动服务器
 
 ```bash
-./opencontext7 server
+./mineru-pdfhub server
 ```
 
 服务器默认使用 stdio 传输，若要启用 HTTP/SSE UI，可在配置中设置：
@@ -39,21 +39,21 @@ server:
 ## 4. 常用 CLI 命令
 
 ```bash
-./opencontext7 register <name> <version> <docs_file>  # 注册文档库
-./opencontext7 list                                   # 查看全部库
-./opencontext7 search <query>                         # 搜索库
-./opencontext7 get <name> [version]                   # 获取文档
-./opencontext7 delete <name> [version]                # 删除版本
-./opencontext7 backup create --note "Before upgrade" # 生成快照
-./opencontext7 backup restore <snapshot-id>           # 恢复快照
-./opencontext7 users list                             # 管理用户
+./mineru-pdfhub register <name> <version> <docs_file>  # 注册文档库
+./mineru-pdfhub list                                   # 查看全部库
+./mineru-pdfhub search <query>                         # 搜索库
+./mineru-pdfhub get <name> [version]                   # 获取文档
+./mineru-pdfhub delete <name> [version]                # 删除版本
+./mineru-pdfhub backup create --note "Before upgrade" # 生成快照
+./mineru-pdfhub backup restore <snapshot-id>           # 恢复快照
+./mineru-pdfhub users list                             # 管理用户
 ```
 
 若需要批量同步 Git 文档，请使用以下命令：
 
 ```bash
-./opencontext7 git add docs-api https://github.com/acme/docs.git docs/reference.md --auto-sync=true
-./opencontext7 git sync                               # 全量同步
+./mineru-pdfhub git add docs-api https://github.com/acme/docs.git docs/reference.md --auto-sync=true
+./mineru-pdfhub git sync                               # 全量同步
 ```
 
 ## 5. 注册与登录
@@ -68,7 +68,7 @@ server:
 
 ## 7. 数据目录结构
 
-默认数据目录位于 `~/.opencontext7`：
+默认数据目录位于 `~/.mineru-pdfhub`：
 
 - `config.yaml`：主配置文件
 - `data/`：所有注册文档的 JSON 存档

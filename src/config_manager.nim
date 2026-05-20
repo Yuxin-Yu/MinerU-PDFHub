@@ -119,7 +119,7 @@ proc getDefaultConfig*(): Config =
       transport: "stdio"
     ),
     storage: StorageConfig(
-      dataDir: getHomeDir() / ".opencontext7" / "data",
+      dataDir: getHomeDir() / ".mineru-pdfhub" / "data",
       maxLibraries: 1000,
       maxDocSize: 10 * 1024 * 1024  # 10MB
     ),
@@ -130,35 +130,35 @@ proc getDefaultConfig*(): Config =
     ),
     integration: GitIntegrationConfig(
       enableAutoSync: false,
-      reposFile: getHomeDir() / ".opencontext7" / "git_repos.json",
+      reposFile: getHomeDir() / ".mineru-pdfhub" / "git_repos.json",
       defaultBranch: "main",
       syncIntervalMinutes: 15,
       autoBootstrap: true
     ),
     backup: BackupConfig(
       enableBackups: false,
-      backupDir: getHomeDir() / ".opencontext7" / "backups",
+      backupDir: getHomeDir() / ".mineru-pdfhub" / "backups",
       retentionDays: 7,
       maxSnapshots: 10
     ),
     access: AccessControlConfig(
       multiUserEnabled: false,
-      usersFile: getHomeDir() / ".opencontext7" / "users.json",
-      rolesFile: getHomeDir() / ".opencontext7" / "roles.json",
+      usersFile: getHomeDir() / ".mineru-pdfhub" / "users.json",
+      rolesFile: getHomeDir() / ".mineru-pdfhub" / "roles.json",
       defaultRole: "viewer",
       enforceLibraryScope: false
     )
   )
 
 proc getConfigPath*(): string =
-  let envPath = getEnv("OPENCONTEXT7_CONFIG", "")
+  let envPath = getEnv("MINERU_PDFHUB_CONFIG", "")
   if envPath.len > 0:
     let dir = envPath.parentDir()
     if dir.len > 0:
       createDir(dir)
     return envPath
-  let envDir = getEnv("OPENCONTEXT7_CONFIG_DIR", "")
-  let configDir = if envDir.len > 0: envDir else: getHomeDir() / ".opencontext7"
+  let envDir = getEnv("MINERU_PDFHUB_CONFIG_DIR", "")
+  let configDir = if envDir.len > 0: envDir else: getHomeDir() / ".mineru-pdfhub"
   createDir(configDir)
   return configDir / "config.yaml"
 
@@ -348,78 +348,81 @@ proc loadConfig*(path: string = ""): Config =
     else:
       discard
   
-  let envHost = getEnv("OPENCONTEXT7_HOST", "")
+  let envHost = getEnv("MINERU_PDFHUB_HOST", "")
   if envHost.len > 0:
     config.server.host = envHost
-  let envPort = getEnv("OPENCONTEXT7_PORT", "")
+  let envPort = getEnv("MINERU_PDFHUB_PORT", "")
   if envPort.len > 0:
     config.server.port = parseIntSafe(envPort, config.server.port)
-  let envTransport = getEnv("OPENCONTEXT7_TRANSPORT", "")
+  let envTransport = getEnv("MINERU_PDFHUB_TRANSPORT", "")
   if envTransport.len > 0:
     let t = envTransport.toLowerAscii()
     if t in ["stdio", "http", "sse"]:
       config.server.transport = t
-  let envDataDir = getEnv("OPENCONTEXT7_DATA_DIR", "")
+  let envDataDir = getEnv("MINERU_PDFHUB_DATA_DIR", "")
   if envDataDir.len > 0:
     config.storage.dataDir = envDataDir
-  let envMaxLibraries = getEnv("OPENCONTEXT7_MAX_LIBRARIES", "")
+  let envMaxLibraries = getEnv("MINERU_PDFHUB_MAX_LIBRARIES", "")
   if envMaxLibraries.len > 0:
     config.storage.maxLibraries = parseIntSafe(envMaxLibraries, config.storage.maxLibraries)
-  let envMaxDocSize = getEnv("OPENCONTEXT7_MAX_DOC_SIZE", "")
+  let envMaxDocSize = getEnv("MINERU_PDFHUB_MAX_DOC_SIZE", "")
   if envMaxDocSize.len > 0:
     config.storage.maxDocSize = parseIntSafe(envMaxDocSize, config.storage.maxDocSize)
-  let envEnableAuth = getEnv("OPENCONTEXT7_ENABLE_AUTH", "")
+  let envEnableAuth = getEnv("MINERU_PDFHUB_ENABLE_AUTH", "")
   if envEnableAuth.len > 0:
     config.security.enableAuth = parseBoolStrict(envEnableAuth, config.security.enableAuth)
-  let envApiKeys = getEnv("OPENCONTEXT7_API_KEYS", "")
+  let envApiKeys = getEnv("MINERU_PDFHUB_API_KEYS", "")
   if envApiKeys.len > 0:
     config.security.apiKeys = parseCsvList(envApiKeys)
-  let envAllowedIps = getEnv("OPENCONTEXT7_ALLOWED_IPS", "")
+  let envAllowedIps = getEnv("MINERU_PDFHUB_ALLOWED_IPS", "")
   if envAllowedIps.len > 0:
     let overrideIps = parseCsvList(envAllowedIps)
     if overrideIps.len > 0:
       config.security.allowedIps = overrideIps
-  let envGitAutoSync = getEnv("OPENCONTEXT7_GIT_AUTOSYNC", "")
+  let envGitAutoSync = getEnv("MINERU_PDFHUB_GIT_AUTOSYNC", "")
   if envGitAutoSync.len > 0:
     config.integration.enableAutoSync = parseBoolStrict(envGitAutoSync, config.integration.enableAutoSync)
-  let envGitReposFile = getEnv("OPENCONTEXT7_GIT_REPOS_FILE", "")
+  let envGitReposFile = getEnv("MINERU_PDFHUB_GIT_REPOS_FILE", "")
   if envGitReposFile.len > 0:
     config.integration.reposFile = envGitReposFile
-  let envGitBranch = getEnv("OPENCONTEXT7_GIT_DEFAULT_BRANCH", "")
+  let envGitBranch = getEnv("MINERU_PDFHUB_GIT_DEFAULT_BRANCH", "")
   if envGitBranch.len > 0:
     config.integration.defaultBranch = envGitBranch
-  let envGitInterval = getEnv("OPENCONTEXT7_GIT_SYNC_MINUTES", "")
+  let envGitInterval = getEnv("MINERU_PDFHUB_GIT_SYNC_MINUTES", "")
   if envGitInterval.len > 0:
     config.integration.syncIntervalMinutes = parseIntSafe(envGitInterval, config.integration.syncIntervalMinutes)
-  let envGitBootstrap = getEnv("OPENCONTEXT7_GIT_BOOTSTRAP", "")
+  let envGitBootstrap = getEnv("MINERU_PDFHUB_GIT_BOOTSTRAP", "")
   if envGitBootstrap.len > 0:
     config.integration.autoBootstrap = parseBoolStrict(envGitBootstrap, config.integration.autoBootstrap)
-  let envBackups = getEnv("OPENCONTEXT7_ENABLE_BACKUPS", "")
+  let envBackups = getEnv("MINERU_PDFHUB_ENABLE_BACKUPS", "")
   if envBackups.len > 0:
     config.backup.enableBackups = parseBoolStrict(envBackups, config.backup.enableBackups)
-  let envBackupDir = getEnv("OPENCONTEXT7_BACKUP_DIR", "")
+  let envBackupDir = getEnv("MINERU_PDFHUB_BACKUP_DIR", "")
   if envBackupDir.len > 0:
     config.backup.backupDir = envBackupDir
-  let envRetention = getEnv("OPENCONTEXT7_BACKUP_RETENTION_DAYS", "")
+  let envRetention = getEnv("MINERU_PDFHUB_BACKUP_RETENTION_DAYS", "")
   if envRetention.len > 0:
     config.backup.retentionDays = parseIntSafe(envRetention, config.backup.retentionDays)
-  let envSnapshots = getEnv("OPENCONTEXT7_BACKUP_MAX_SNAPSHOTS", "")
+  let envSnapshots = getEnv("MINERU_PDFHUB_BACKUP_MAX_SNAPSHOTS", "")
   if envSnapshots.len > 0:
     config.backup.maxSnapshots = parseIntSafe(envSnapshots, config.backup.maxSnapshots)
-  let envMultiUser = getEnv("OPENCONTEXT7_MULTI_USER", "")
+  let envMultiUser = getEnv("MINERU_PDFHUB_MULTI_USER", "")
   if envMultiUser.len > 0:
     config.access.multiUserEnabled = parseBoolStrict(envMultiUser, config.access.multiUserEnabled)
-  let envUsersFile = getEnv("OPENCONTEXT7_USERS_FILE", "")
+  let envUsersFile = getEnv("MINERU_PDFHUB_USERS_FILE", "")
   if envUsersFile.len > 0:
     config.access.usersFile = envUsersFile
-  let envRolesFile = getEnv("OPENCONTEXT7_ROLES_FILE", "")
+  let envRolesFile = getEnv("MINERU_PDFHUB_ROLES_FILE", "")
   if envRolesFile.len > 0:
     config.access.rolesFile = envRolesFile
-  let envDefaultRole = getEnv("OPENCONTEXT7_DEFAULT_ROLE", "")
+  let envDefaultRole = getEnv("MINERU_PDFHUB_DEFAULT_ROLE", "")
   if envDefaultRole.len > 0:
     config.access.defaultRole = envDefaultRole
-  let envEnforceScope = getEnv("OPENCONTEXT7_ENFORCE_LIBRARY_SCOPE", "")
+  let envEnforceScope = getEnv("MINERU_PDFHUB_ENFORCE_LIBRARY_SCOPE", "")
   if envEnforceScope.len > 0:
     config.access.enforceLibraryScope = parseBoolStrict(envEnforceScope, config.access.enforceLibraryScope)
-  
+
+  if config.server.port < 1 or config.server.port > 65535:
+    config.server.port = 8080
+
   return config

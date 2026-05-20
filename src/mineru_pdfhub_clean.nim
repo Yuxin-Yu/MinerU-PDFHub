@@ -1,5 +1,5 @@
 ##[
-  OpenContext7 - On-premises MCP server for private library documentation
+  MinerU-PDFHub - On-premises MCP server for private library documentation
   
   This server provides MCP (Model Context Protocol) interface for managing
   and serving documentation of private/internal libraries.
@@ -15,7 +15,7 @@ import library_manager, config_manager, cli, mcp_helpers
 const VERSION = "1.0.0"
 
 # Create the MCP server using the macro API with simple, GC-safe operations
-let server = mcpServer("opencontext7", VERSION):
+let server = mcpServer("mineru-pdfhub", VERSION):
   
   mcpTool:
     proc register_library(name: string, version: string, docs: string, description: string = ""): string {.gcsafe.} =
@@ -52,25 +52,25 @@ let server = mcpServer("opencontext7", VERSION):
 
 proc serveWithStdio() {.async.} =
   ## Serve using stdio transport (default)
-  info "Starting OpenContext7 MCP Server with stdio transport"
+  info "Starting MinerU-PDFHub MCP Server with stdio transport"
   let transport = newStdioTransport()
   transport.serve(server)
 
 proc serveWithHTTP(host: string, port: int, authConfig: AuthConfig = newAuthConfig()) {.async.} =
   ## Serve using HTTP transport
-  info "Starting OpenContext7 MCP Server with HTTP transport on " & host & ":" & $port
+  info "Starting MinerU-PDFHub MCP Server with HTTP transport on " & host & ":" & $port
   let transport = newMummyTransport(port = port, host = host, authConfig = authConfig)
   transport.serve(server)
 
 proc serveWithSSE(host: string, port: int, authConfig: AuthConfig = newAuthConfig()) {.async.} =
   ## Serve using SSE transport
-  info "Starting OpenContext7 MCP Server with SSE transport on " & host & ":" & $port
+  info "Starting MinerU-PDFHub MCP Server with SSE transport on " & host & ":" & $port
   let transport = newSseTransport(port = port, host = host, authConfig = authConfig)
   transport.serve(server)
 
 proc main() {.async.} =
   addHandler(newConsoleLogger(lvlInfo))
-  info "Starting OpenContext7 MCP Server v" & VERSION
+  info "Starting MinerU-PDFHub MCP Server v" & VERSION
   
   # Load configuration
   let config = loadConfig()

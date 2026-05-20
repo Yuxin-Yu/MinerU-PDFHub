@@ -1,2 +1,8 @@
 nimcache
-opencontext7
+mineru-pdfhub
+*.log
+*.claude
+*.codebuddy
+*.omc
+*.Xil
+patent

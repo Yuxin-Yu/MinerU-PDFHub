@@ -1,4 +1,4 @@
-# OpenContext7 Configuration Example
+# MinerU-PDFHub Configuration Example
 
 server:
   # Server host (localhost for local access, 0.0.0.0 for network access)
@@ -15,7 +15,7 @@ server:
 
 storage:
   # Directory to store library data and index
-  dataDir: ~/.opencontext7/data
+  dataDir: ~/.mineru-pdfhub/data
   
   # Maximum number of libraries to store
   maxLibraries: 1000

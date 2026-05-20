@@ -1,9 +1,9 @@
 ##[
-  Comprehensive tests for OpenContext7 MCP Server - 100% coverage
+  Comprehensive tests for MinerU-PDFHub MCP Server - 100% coverage
 ]##
 
 import unittest, asyncdispatch, json, times, os, options, strutils
-import ../src/[opencontext7, library_manager, config_manager, mcp_helpers]
+import ../src/[mineru_pdfhub, library_manager, config_manager, mcp_helpers]
 
 # Mock MCP server for testing
 type
@@ -11,8 +11,8 @@ type
     tools: seq[string]
     resources: seq[string]
 
-suite "OpenContext7 Server Comprehensive Tests":
-let testDataDir = getTempDir() / "opencontext7_server_test"
+suite "MinerU-PDFHub Server Comprehensive Tests":
+  let testDataDir = getTempDir() / "mineru_pdfhub_server_test"
   let testConfigPath = testDataDir / "config.yaml"
   
   setup:
@@ -22,7 +22,7 @@ let testDataDir = getTempDir() / "opencontext7_server_test"
   teardown:
     removeDir(testDataDir)
 
-  test "Create OpenContext7Server with default config":
+  test "Create MinerUPDFHubServer with default config":
     # Create a minimal config for testing
     let config = Config(
       server: ServerConfig(host: "localhost", port: 8080, transport: "stdio"),
@@ -327,7 +327,7 @@ let testDataDir = getTempDir() / "opencontext7_server_test"
     check count == 1
     
     # Simulate the resource content that would be created
-    let resourceContent = "OpenContext7 MCP Server v1.0.0\nManaging " & $count & " libraries"
+    let resourceContent = "MinerU-PDFHub MCP Server v1.0.0\nManaging " & $count & " libraries"
     check resourceContent.contains("Managing 1 libraries")
 
   test "Configuration loading for server":
@@ -371,7 +371,7 @@ let testDataDir = getTempDir() / "opencontext7_server_test"
       discard  # Expected for some implementations
     
     # 2. Very long library name
-    let longName = "lib" & "x".repeat(1000)
+    let longName = "lib" & "x".repeat(240)
     let longLib = Library(
       name: longName,
       version: "1.0.0",

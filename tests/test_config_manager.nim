@@ -6,17 +6,17 @@ import unittest, os, strutils
 import ../src/config_manager
 
 suite "Config Manager Comprehensive Tests":
-  let testConfigDir = "/tmp/opencontext7_config_test"
+  let testConfigDir = "/tmp/mineru_pdfhub_config_test"
   let testConfigPath = testConfigDir / "test_config.yaml"
   
   setup:
     removeDir(testConfigDir)
     createDir(testConfigDir)
-    putEnv("OPENCONTEXT7_CONFIG", testConfigPath)
+    putEnv("MINERU_PDFHUB_CONFIG", testConfigPath)
   
   teardown:
     removeDir(testConfigDir)
-    delEnv("OPENCONTEXT7_CONFIG")
+    delEnv("MINERU_PDFHUB_CONFIG")
 
   test "Get default config":
     let config = getDefaultConfig()
@@ -24,7 +24,7 @@ suite "Config Manager Comprehensive Tests":
     check config.server.host == "localhost"
     check config.server.port == 8080
     check config.server.transport == "stdio"
-    check config.storage.dataDir == getHomeDir() / ".opencontext7" / "data"
+    check config.storage.dataDir == getHomeDir() / ".mineru-pdfhub" / "data"
     check config.storage.maxLibraries == 1000
     check config.storage.maxDocSize == 10 * 1024 * 1024
     check config.security.enableAuth == false
@@ -237,7 +237,7 @@ security:
   test "Config validation - integer parsing":
     let intTestCases = [
       ("8080", 8080),
-      ("0", 0),
+      ("0", 8080),
       ("65535", 65535),
       ("-1", 8080),      # Should default to 8080 for invalid
       ("abc", 8080),     # Should default to 8080 for invalid

@@ -1,31 +1,31 @@
 version: '3.8'
 
 services:
-  opencontext7:
-    image: opencontext7:latest
-    container_name: opencontext7
+  mineru-pdfhub:
+    image: mineru-pdfhub:latest
+    container_name: mineru-pdfhub
     restart: unless-stopped
     ports:
       - "8080:8080"
     volumes:
-      - opencontext7-config:/config
-      - opencontext7-data:/data
+      - mineru-pdfhub-config:/config
+      - mineru-pdfhub-data:/data
     environment:
-      - OPENCONTEXT7_TRANSPORT=http
-      - OPENCONTEXT7_ENABLE_AUTH=false
-      - OPENCONTEXT7_HOST=0.0.0.0
+      - MINERU_PDFHUB_TRANSPORT=http
+      - MINERU_PDFHUB_ENABLE_AUTH=false
+      - MINERU_PDFHUB_HOST=0.0.0.0
       # 可根据需要添加更多环境变量
-      # - OPENCONTEXT7_CONFIG_DIR=/config
-      # - OPENCONTEXT7_DATA_DIR=/data
-      # - OPENCONTEXT7_PORT=8080
-      # - OPENCONTEXT7_API_KEYS=your-api-key
-      # - OPENCONTEXT7_ALLOWED_IPS=192.168.1.0/24
-      # - OPENCONTEXT7_GIT_AUTOSYNC=true
-      # - OPENCONTEXT7_GIT_SYNC_MINUTES=60
-      # - OPENCONTEXT7_ENABLE_BACKUPS=true
-      # - OPENCONTEXT7_MULTI_USER=false
+      # - MINERU_PDFHUB_CONFIG_DIR=/config
+      # - MINERU_PDFHUB_DATA_DIR=/data
+      # - MINERU_PDFHUB_PORT=8080
+      # - MINERU_PDFHUB_API_KEYS=your-api-key
+      # - MINERU_PDFHUB_ALLOWED_IPS=192.168.1.0/24
+      # - MINERU_PDFHUB_GIT_AUTOSYNC=true
+      # - MINERU_PDFHUB_GIT_SYNC_MINUTES=60
+      # - MINERU_PDFHUB_ENABLE_BACKUPS=true
+      # - MINERU_PDFHUB_MULTI_USER=false
     networks:
-      - opencontext7-net
+      - mineru-pdfhub-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
@@ -34,11 +34,11 @@ services:
       start_period: 40s
 
 volumes:
-  opencontext7-config:
+  mineru-pdfhub-config:
     driver: local
-  opencontext7-data:
+  mineru-pdfhub-data:
     driver: local
 
 networks:
-  opencontext7-net:
+  mineru-pdfhub-net:
     driver: bridge

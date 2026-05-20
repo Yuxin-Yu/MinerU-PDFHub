@@ -1,6 +1,6 @@
 # Docker Compose 部署指南
 
-本文档介绍如何使用Docker Compose部署OpenContext7。
+本文档介绍如何使用Docker Compose部署MinerU-PDFHub。
 
 ## 快速开始
 
@@ -11,7 +11,7 @@ docker build \
   --build-arg VERSION=$(git describe --tags --always) \
   --build-arg VCS_REF=$(git rev-parse HEAD) \
   --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  -t opencontext7:latest .
+  -t mineru-pdfhub:latest .
 ```
 
 ### 2. 启动服务（开发环境）
@@ -21,7 +21,7 @@ docker build \
 docker-compose up -d
 
 # 查看日志
-docker-compose logs -f opencontext7
+docker-compose logs -f mineru-pdfhub
 
 # 停止服务
 docker-compose down
@@ -40,7 +40,7 @@ cp .env.example .env
 docker-compose -f docker-compose.prod.yml up -d
 
 # 查看日志
-docker-compose -f docker-compose.prod.yml logs -f opencontext7
+docker-compose -f docker-compose.prod.yml logs -f mineru-pdfhub
 
 # 停止服务
 docker-compose -f docker-compose.prod.yml down
@@ -51,16 +51,16 @@ docker-compose -f docker-compose.prod.yml down
 ### 持久化数据
 
 数据通过Docker卷进行持久化：
-- `opencontext7-config`: 存储配置文件
-- `opencontext7-data`: 存储库文档和其他数据
+- `mineru-pdfhub-config`: 存储配置文件
+- `mineru-pdfhub-data`: 存储库文档和其他数据
 
 如需备份，可以导出卷：
 ```bash
 # 备份配置
-docker run --rm -v opencontext7-config:/data -v $(pwd):/backup alpine tar czf /backup/config-backup.tar.gz -C /data .
+docker run --rm -v mineru-pdfhub-config:/data -v $(pwd):/backup alpine tar czf /backup/config-backup.tar.gz -C /data .
 
 # 备份数据
-docker run --rm -v opencontext7-data:/data -v $(pwd):/backup alpine tar czf /backup/data-backup.tar.gz -C /data .
+docker run --rm -v mineru-pdfhub-data:/data -v $(pwd):/backup alpine tar czf /backup/data-backup.tar.gz -C /data .
 ```
 
 ### 环境变量配置
@@ -69,19 +69,19 @@ docker run --rm -v opencontext7-data:/data -v $(pwd):/backup alpine tar czf /bac
 
 | 变量名 | 默认值 | 说明 |
 |--------|--------|------|
-| OPENCONTEXT7_CONFIG_DIR | /config | 配置目录 |
-| OPENCONTEXT7_DATA_DIR | /data | 数据目录 |
-| OPENCONTEXT7_HOST | 0.0.0.0 | 服务器监听地址 |
-| OPENCONTEXT7_PORT | 8080 | 服务器端口 |
-| OPENCONTEXT7_TRANSPORT | http | 传输协议 |
-| OPENCONTEXT7_ENABLE_AUTH | false | 是否启用认证 |
-| OPENCONTEXT7_API_KEYS | - | API密钥列表（逗号分隔） |
-| OPENCONTEXT7_ALLOWED_IPS | - | 允许的IP范围（逗号分隔） |
-| OPENCONTEXT7_GIT_AUTOSYNC | false | 是否启用Git自动同步 |
-| OPENCONTEXT7_GIT_SYNC_MINUTES | 60 | Git同步间隔（分钟） |
-| OPENCONTEXT7_ENABLE_BACKUPS | false | 是否启用备份 |
-| OPENCONTEXT7_BACKUP_DIR | /data/backups | 备份目录 |
-| OPENCONTEXT7_MULTI_USER | false | 是否启用多用户 |
+| MINERU_PDFHUB_CONFIG_DIR | /config | 配置目录 |
+| MINERU_PDFHUB_DATA_DIR | /data | 数据目录 |
+| MINERU_PDFHUB_HOST | 0.0.0.0 | 服务器监听地址 |
+| MINERU_PDFHUB_PORT | 8080 | 服务器端口 |
+| MINERU_PDFHUB_TRANSPORT | http | 传输协议 |
+| MINERU_PDFHUB_ENABLE_AUTH | false | 是否启用认证 |
+| MINERU_PDFHUB_API_KEYS | - | API密钥列表（逗号分隔） |
+| MINERU_PDFHUB_ALLOWED_IPS | - | 允许的IP范围（逗号分隔） |
+| MINERU_PDFHUB_GIT_AUTOSYNC | false | 是否启用Git自动同步 |
+| MINERU_PDFHUB_GIT_SYNC_MINUTES | 60 | Git同步间隔（分钟） |
+| MINERU_PDFHUB_ENABLE_BACKUPS | false | 是否启用备份 |
+| MINERU_PDFHUB_BACKUP_DIR | /data/backups | 备份目录 |
+| MINERU_PDFHUB_MULTI_USER | false | 是否启用多用户 |
 
 ### 反向代理配置
 
@@ -116,7 +116,7 @@ docker build \
   --build-arg VERSION=$(git describe --tags --always) \
   --build-arg VCS_REF=$(git rev-parse HEAD) \
   --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  -t opencontext7:latest .
+  -t mineru-pdfhub:latest .
 
 # 4. 启动服务
 docker-compose -f docker-compose.prod.yml up -d
@@ -128,20 +128,20 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ```bash
 # 开发环境
-docker-compose logs -f opencontext7
+docker-compose logs -f mineru-pdfhub
 
 # 生产环境
-docker-compose -f docker-compose.prod.yml logs -f opencontext7
+docker-compose -f docker-compose.prod.yml logs -f mineru-pdfhub
 ```
 
 ### 进入容器调试
 
 ```bash
 # 开发环境
-docker-compose exec opencontext7 /bin/bash
+docker-compose exec mineru-pdfhub /bin/bash
 
 # 生产环境
-docker-compose -f docker-compose.prod.yml exec opencontext7 /bin/bash
+docker-compose -f docker-compose.prod.yml exec mineru-pdfhub /bin/bash
 ```
 
 ### 端口冲突

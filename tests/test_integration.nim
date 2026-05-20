@@ -6,7 +6,7 @@ import unittest, asyncdispatch, times, os, json, strutils
 import ../src/[library_manager, config_manager, cli, mcp_helpers]
 
 suite "Integration Tests":
-  let testDataDir = "/tmp/opencontext7_integration_test"
+  let testDataDir = "/tmp/mineru_pdfhub_integration_test"
   let testConfigPath = testDataDir / "config.yaml"
   
   setup:
@@ -207,7 +207,8 @@ suite "Integration Tests":
     check utilsResults[0].name == "database-utils"
     
     let frameworkResults = waitFor manager.searchLibraries("framework")
-    check frameworkResults.len == 2  # logging-framework matches both "framework" and might match description
+    check frameworkResults.len == 1
+    check frameworkResults[0].name == "logging-framework"
     
     # Test getting specific libraries
     let dbLib = waitFor manager.getLibrary("database-utils", "2.1.0")

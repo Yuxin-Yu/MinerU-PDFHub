@@ -6,13 +6,13 @@ import test_library_manager
 import test_library_manager_comprehensive
 import test_config_manager
 import test_cli
-import test_opencontext7_server
+import test_mineru_pdfhub_server
 import test_mcp_helpers
 import test_error_handling
 import test_integration
 
 when isMainModule:
-  echo "Running all OpenContext7 tests for 100% coverage..."
+  echo "Running all MinerU-PDFHub tests for 100% coverage..."
   echo "Test suites included:"
   echo "  - Basic Library Manager Tests"
   echo "  - Comprehensive Library Manager Tests"

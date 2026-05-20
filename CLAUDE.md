@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Overview
-OpenContext7 is an on-premises MCP (Model Context Protocol) server for managing private/internal library documentation. It's written in Nim and provides a self-hosted alternative to cloud-based documentation services.
+MinerU-PDFHub is an on-premises MCP (Model Context Protocol) server for managing private/internal library documentation. It's written in Nim and provides a self-hosted alternative to cloud-based documentation services.
 
 ## Essential Commands
 
@@ -30,20 +30,20 @@ nimble clean
 ### Running the Server
 ```bash
 # Start MCP server (stdio mode)
-./opencontext7 server
+./mineru-pdfhub server
 
 # Initialize configuration
-./opencontext7 init
+./mineru-pdfhub init
 
 # Register a library
-./opencontext7 register <name> <version> <docs_file>
+./mineru-pdfhub register <name> <version> <docs_file>
 ```
 
 ## Architecture
 
 The codebase follows an async/await pattern with modular separation:
 
-- **`src/opencontext7.nim`**: Main server implementing MCP protocol. Handles tool calls and resource requests.
+- **`src/mineru_pdfhub.nim`**: Main server implementing MCP protocol. Handles tool calls and resource requests.
 - **`src/library_manager.nim`**: Core business logic for library CRUD operations, search indexing, and JSON persistence.
 - **`src/config_manager.nim`**: YAML configuration management with validation and defaults.
 - **`src/cli.nim`**: Command-line interface for administrative tasks.

@@ -1,12 +1,12 @@
 ##[
-  OpenContext7 - On-premises MCP server for private library documentation
+  MinerU-PDFHub - On-premises MCP server for private library documentation
   
   This server provides MCP (Model Context Protocol) interface for managing
   and serving documentation of private/internal libraries.
   
   Enhanced with HTTP and SSE transport mode support.
   
-  OpenContext7 主程序：负责启动 MCP 服务器、选择传输模式并协调 Git/备份/权限等扩展功能。
+  MinerU-PDFHub 主程序：负责启动 MCP 服务器、选择传输模式并协调 Git/备份/权限等扩展功能。
 ]##
 
 import std/[asyncdispatch, asyncnet, asynchttpserver, json, strutils, os, logging, options, tables, random, nativesockets, sequtils]
@@ -22,7 +22,7 @@ var g_access_manager {.threadvar.}: AccessManager
 var g_backup_manager {.threadvar.}: BackupManager
 
 # Create the MCP server using the macro API with simple, GC-safe operations
-let server = mcpServer("opencontext7", VERSION):
+let server = mcpServer("mineru-pdfhub", VERSION):
   
   mcpTool:
     proc register_library(name: string, version: string, docs: string, description: string = ""): JsonNode {.gcsafe.} =
@@ -739,7 +739,7 @@ proc startSseKeepAlive(client: SseClient, sessionId: string) {.async, gcsafe.} =
   removeSseClient(client.state, sessionId)
 proc serveWithStdio() {.async.} =
   ## Serve using stdio transport (default)
-  info "Starting OpenContext7 MCP Server with stdio transport"
+  info "Starting MinerU-PDFHub MCP Server with stdio transport"
   let transport = newStdioTransport()
   transport.serve(server)
 
@@ -767,7 +767,7 @@ proc jsonRpcResponseToJson(response: JsonRpcResponse): JsonNode =
 
 proc serveWithHTTP*(host: string, port: int, config: Config) {.async.} =
   ## Serve using HTTP transport with JSON API endpoints
-  info "Starting OpenContext7 MCP Server with HTTP transport on " & host & ":" & $port
+  info "Starting MinerU-PDFHub MCP Server with HTTP transport on " & host & ":" & $port
   let serverInstance = newAsyncHttpServer()
   httpServerInstance = serverInstance
   let mcpServer = server
@@ -1045,7 +1045,7 @@ proc serveWithHTTP*(host: string, port: int, config: Config) {.async.} =
 
 proc serveWithSSE*(host: string, port: int, config: Config) {.async.} =
   ## Serve using SSE transport with dedicated SSE and message endpoints
-  info "Starting OpenContext7 MCP Server with SSE transport on " & host & ":" & $port
+  info "Starting MinerU-PDFHub MCP Server with SSE transport on " & host & ":" & $port
   let serverInstance = newAsyncHttpServer()
   sseServerInstance = serverInstance
   let state = sseState
@@ -1349,7 +1349,7 @@ proc serveWithSSE*(host: string, port: int, config: Config) {.async.} =
 proc main() {.async.} =
   addHandler(newConsoleLogger(lvlInfo))
   randomize()
-  info "Starting OpenContext7 MCP Server v" & VERSION
+  info "Starting MinerU-PDFHub MCP Server v" & VERSION
   
   # Load configuration
   let config = loadConfig()

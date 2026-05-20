@@ -6,7 +6,7 @@ import unittest, asyncdispatch, times, os, json, options
 import ../src/library_manager
 
 suite "Library Manager Tests":
-  let testDataDir = "/tmp/opencontext7_test"
+  let testDataDir = "/tmp/mineru_pdfhub_test"
   
   setup:
     removeDir(testDataDir)

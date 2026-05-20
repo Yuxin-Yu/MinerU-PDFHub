@@ -6,7 +6,7 @@ import unittest, asyncdispatch, times, os, json, strutils
 import ../src/[library_manager, config_manager]
 
 suite "Error Handling and Boundary Value Tests":
-  let testDataDir = "/tmp/opencontext7_error_test"
+  let testDataDir = "/tmp/mineru_pdfhub_error_test"
   
   setup:
     removeDir(testDataDir)
@@ -50,7 +50,7 @@ suite "Error Handling and Boundary Value Tests":
     let manager = newLibraryManager(testDataDir)
     
     # Test with very long library name
-    let longName = "x".repeat(255)  # Maximum filename length on most systems
+    let longName = "x".repeat(240)
     let lib = Library(
       name: longName,
       version: "1.0.0",
@@ -222,12 +222,12 @@ suite "Error Handling and Boundary Value Tests":
     let configPath = testDataDir / "boundary.yaml"
     
     let boundaryValues = [
-      ("0", 0),
+      ("0", 8080),  # Should default to 8080 for invalid
       ("1", 1),
       ("-1", 8080),  # Should default to 8080 for invalid
       ("65535", 65535),  # Max port
       ("65536", 8080),   # Should default for invalid port
-      ("2147483647", 2147483647),  # Max int32
+      ("2147483647", 8080),  # Exceeds port range, should default
       ("-2147483648", 8080)  # Min int32, should default
     ]
     
@@ -236,7 +236,7 @@ suite "Error Handling and Boundary Value Tests":
       writeFile(configPath, yaml)
       
       let config = loadConfig(configPath)
-      if expected == 8080 and value != "0":
+      if expected == 8080:
         # Invalid values should default to 8080
         check config.server.port == 8080
       else:

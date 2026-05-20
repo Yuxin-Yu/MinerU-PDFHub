@@ -1,10 +1,10 @@
-# OpenContext7
+# MinerU-PDFHub
 
 [![Nim](https://img.shields.io/badge/Nim-2.0%2B-blue)](https://nim-lang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-green)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-OpenContext7 is an on-premises MCP (Model Context Protocol) server for managing and serving documentation of private/internal libraries. It provides a secure, self-hosted alternative to cloud-based documentation services, perfect for organizations that need to keep their proprietary library documentation internal.
+MinerU-PDFHub is an on-premises MCP (Model Context Protocol) server for managing and serving documentation of private/internal libraries. It provides a secure, self-hosted alternative to cloud-based documentation services, perfect for organizations that need to keep their proprietary library documentation internal.
 
 👉 Looking for the Chinese guide? Check out the [中文文档](README_CN.md).
 
@@ -26,12 +26,12 @@ OpenContext7 is an on-premises MCP (Model Context Protocol) server for managing 
 - [📚 Use Cases](#-use-cases)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
-- [🆚 OpenContext7 vs Context7 SaaS](#-opencontext7-vs-context7-saas)
+- [🆚 MinerU-PDFHub vs Context7 SaaS](#-mineru-pdfhub-vs-context7-saas)
 - [🚀 Roadmap](#-roadmap)
 
 ## 🧭 Project Overview
 
-OpenContext7 stores each library as a JSON artifact enriched with structured sections, language-tagged code snippets, and a knowledge-aware index. The server exposes MCP-compliant tools, a CLI, and optional HTTP/SSE transports so Large Language Models can retrieve domain-specific documentation without leaving your private network.
+MinerU-PDFHub stores each library as a JSON artifact enriched with structured sections, language-tagged code snippets, and a knowledge-aware index. The server exposes MCP-compliant tools, a CLI, and optional HTTP/SSE transports so Large Language Models can retrieve domain-specific documentation without leaving your private network.
 
 ## 🚀 Features
 
@@ -60,8 +60,8 @@ OpenContext7 stores each library as a JSON artifact enriched with structured sec
 ### From Source
 
 ```bash
-git clone https://github.com/yourorg/opencontext7.git
-cd opencontext7
+git clone https://github.com/yourorg/mineru-pdfhub.git
+cd mineru-pdfhub
 nimble install
 ```
 
@@ -83,31 +83,31 @@ docker build \
   --build-arg VERSION=$(git describe --tags --always) \
   --build-arg VCS_REF=$(git rev-parse HEAD) \
   --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  -t opencontext7:latest .
+  -t mineru-pdfhub:latest .
 ```
 
-> The image runs as the non-root `opencontext7` user (UID/GID 1000 by default); override with `--build-arg APP_UID=... APP_GID=...` or ensure that bind-mounted folders are writable by that user.
+> The image runs as the non-root `mineru-pdfhub` user (UID/GID 1000 by default); override with `--build-arg APP_UID=... APP_GID=...` or ensure that bind-mounted folders are writable by that user.
 
 Start the container with persistent volumes for configuration and data:
 
 ```bash
-docker run -d --name opencontext7 \
+docker run -d --name mineru-pdfhub \
   -p 8080:8080 \
-  -v opencontext7-config:/config \
-  -v opencontext7-data:/data \
-  -e OPENCONTEXT7_TRANSPORT=http \
-  -e OPENCONTEXT7_ENABLE_AUTH=false \
-  opencontext7:latest
+  -v mineru-pdfhub-config:/config \
+  -v mineru-pdfhub-data:/data \
+  -e MINERU_PDFHUB_TRANSPORT=http \
+  -e MINERU_PDFHUB_ENABLE_AUTH=false \
+  mineru-pdfhub:latest
 ```
 
 `docker-entrypoint.sh` will bootstrap `/config/config.yaml` the first time it runs. You can customize the server entirely through environment variables; the most commonly used ones are:
 
-- `OPENCONTEXT7_CONFIG_DIR` / `OPENCONTEXT7_DATA_DIR`
-- `OPENCONTEXT7_HOST` / `OPENCONTEXT7_PORT` / `OPENCONTEXT7_TRANSPORT`
-- `OPENCONTEXT7_API_KEYS` (comma-separated) and `OPENCONTEXT7_ALLOWED_IPS`
-- `OPENCONTEXT7_GIT_AUTOSYNC`, `OPENCONTEXT7_GIT_REPOS_FILE`, `OPENCONTEXT7_GIT_SYNC_MINUTES`
-- `OPENCONTEXT7_ENABLE_BACKUPS`, `OPENCONTEXT7_BACKUP_DIR`
-- `OPENCONTEXT7_MULTI_USER`, `OPENCONTEXT7_USERS_FILE`, `OPENCONTEXT7_ROLES_FILE`
+- `MINERU_PDFHUB_CONFIG_DIR` / `MINERU_PDFHUB_DATA_DIR`
+- `MINERU_PDFHUB_HOST` / `MINERU_PDFHUB_PORT` / `MINERU_PDFHUB_TRANSPORT`
+- `MINERU_PDFHUB_API_KEYS` (comma-separated) and `MINERU_PDFHUB_ALLOWED_IPS`
+- `MINERU_PDFHUB_GIT_AUTOSYNC`, `MINERU_PDFHUB_GIT_REPOS_FILE`, `MINERU_PDFHUB_GIT_SYNC_MINUTES`
+- `MINERU_PDFHUB_ENABLE_BACKUPS`, `MINERU_PDFHUB_BACKUP_DIR`
+- `MINERU_PDFHUB_MULTI_USER`, `MINERU_PDFHUB_USERS_FILE`, `MINERU_PDFHUB_ROLES_FILE`
 
 All of the variables exposed in `docker-entrypoint.sh` can be passed with `-e VAR=value` when running the container.
 
@@ -116,10 +116,10 @@ All of the variables exposed in `docker-entrypoint.sh` can be passed with `-e VA
 ### 1. Initialize Configuration
 
 ```bash
-./opencontext7 init
+./mineru-pdfhub init
 ```
 
-This creates a default configuration file at `~/.opencontext7/config.yaml`.
+This creates a default configuration file at `~/.mineru-pdfhub/config.yaml`.
 
 ### 2. Register Your First Library
 
@@ -128,16 +128,21 @@ This creates a default configuration file at `~/.opencontext7/config.yaml`.
 echo "# My Internal API\n\nThis is our internal REST API..." > my-api-docs.md
 
 # Register the library
-./opencontext7 register "my-internal-api" "1.0.0" my-api-docs.md
+./mineru-pdfhub register "my-internal-api" "1.0.0" my-api-docs.md
+
+# Register directly from PDF (MinerU + OpenAI-compatible LLM)
+./mineru-pdfhub register-pdf "my-internal-api-pdf" "1.0.0" ./docs/api.pdf \
+  --llm-base-url=http://127.0.0.1:11434/v1 \
+  --llm-model=qwen2.5:14b
 ```
 
 ### 3. Start the MCP Server
 
 ```bash
-./opencontext7 server
+./mineru-pdfhub server
 ```
 
-- Want the web UI? Set `server.transport: http` (or `sse`) in `~/.opencontext7/config.yaml`, restart the server, and open `http://<host>:<port>/ui`.
+- Want the web UI? Set `server.transport: http` (or `sse`) in `~/.mineru-pdfhub/config.yaml`, restart the server, and open `http://<host>:<port>/ui`.
 
 ### 4. Configure Your MCP Client
 
@@ -146,8 +151,8 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 ```json
 {
   "mcpServers": {
-    "opencontext7": {
-      "command": "/path/to/opencontext7",
+    "mineru-pdfhub": {
+      "command": "/path/to/mineru-pdfhub",
       "args": ["server"]
     }
   }
@@ -157,7 +162,7 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 ### 5. Use in Your Prompts
 
 ```
-Create a REST API client for our internal user service. use opencontext7 to get the API documentation.
+Create a REST API client for our internal user service. use mineru-pdfhub to get the API documentation.
 ```
 
 ## 📖 Usage
@@ -166,40 +171,81 @@ Create a REST API client for our internal user service. use opencontext7 to get 
 
 ```bash
 # Server management
-opencontext7 server                    # Start MCP server
-opencontext7 init                      # Initialize configuration
+mineru-pdfhub server                    # Start MCP server
+mineru-pdfhub init                      # Initialize configuration
 
 # Library management  
-opencontext7 register <name> <version> <docs_file>  # Register library
-opencontext7 list                      # List all libraries
-opencontext7 search <query>            # Search libraries
-opencontext7 get <name> [version]      # Get library docs
-opencontext7 delete <name> [version]   # Delete library
-opencontext7 export <name> [--version=VER] <file>   # Export library to JSON
-opencontext7 import <file> [--override=true]        # Import library from JSON
+mineru-pdfhub register <name> <version> <docs_file>  # Register library
+mineru-pdfhub register-pdf <name> <version> <pdf_file> [opts] # PDF -> MinerU -> LLM -> register
+mineru-pdfhub list                      # List all libraries
+mineru-pdfhub search <query>            # Search libraries
+mineru-pdfhub get <name> [version]      # Get library docs
+mineru-pdfhub delete <name> [version]   # Delete library
+mineru-pdfhub export <name> [--version=VER] <file>   # Export library to JSON
+mineru-pdfhub import <file> [--override=true]        # Import library from JSON
 
 # Git integration
-opencontext7 git list                  # Show configured repositories
-opencontext7 git add <id> <url> <docs_path> [opts]
-opencontext7 git sync [id]             # Trigger manual sync
+mineru-pdfhub git list                  # Show configured repositories
+mineru-pdfhub git add <id> <url> <docs_path> [opts]
+mineru-pdfhub git sync [id]             # Trigger manual sync
 
 # Backups
-opencontext7 backup list               # Show backup snapshots
-opencontext7 backup create [--note=...]# Create compressed tarball snapshot
-opencontext7 backup restore <id>       # Restore snapshot (replaces data dir)
-opencontext7 backup prune              # Enforce retention and max snapshots
+mineru-pdfhub backup list               # Show backup snapshots
+mineru-pdfhub backup create [--note=...]# Create compressed tarball snapshot
+mineru-pdfhub backup restore <id>       # Restore snapshot (replaces data dir)
+mineru-pdfhub backup prune              # Enforce retention and max snapshots
 
 # Access control
-opencontext7 users list|add|remove|deactivate|activate ...
-opencontext7 roles list|add|remove ...
+mineru-pdfhub users list|add|remove|deactivate|activate ...
+mineru-pdfhub roles list|add|remove ...
 
 # Configuration
-opencontext7 config                    # Show current configuration
+mineru-pdfhub config                    # Show current configuration
 ```
+
+`register-pdf` supports `--mineru-cmd`, `--mineru-backend`, `--mineru-method`, `--llm-base-url`, `--llm-api-key`, `--llm-model`, `--llm-timeout-ms`, `--llm-max-input-chars`, `--keep-temp`, and `--temp-dir`.  
+You can also set `MINERU_PDFHUB_LLM_BASE_URL`, `MINERU_PDFHUB_LLM_API_KEY`, `MINERU_PDFHUB_LLM_MODEL`, and `MINERU_PDFHUB_LLM_MAX_INPUT_CHARS` via environment variables.
+
+### PDF Registration Pipeline (`register-pdf`)
+
+`register-pdf` integrates MinerU and an OpenAI-compatible LLM into one command:
+
+1. Parse PDF with MinerU and produce markdown  
+2. Normalize markdown into MinerU-PDFHub-friendly structure via LLM  
+3. Register the normalized markdown with the existing library registration flow
+
+Example:
+
+```bash
+mineru-pdfhub register-pdf "chip-docs" "1.0.0" ./specs/chip.pdf \
+  --llm-base-url=http://127.0.0.1:11434/v1 \
+  --llm-model=qwen2.5:14b \
+  --llm-max-input-chars=18000
+```
+
+Common options:
+
+- `--description=TEXT`
+- `--mineru-cmd=CMD` (default: `mineru`)
+- `--mineru-backend=BACKEND` (default: `pipeline`)
+- `--mineru-method=METHOD` (default: `auto`)
+- `--llm-base-url=URL`
+- `--llm-api-key=KEY`
+- `--llm-model=MODEL`
+- `--llm-timeout-ms=N` (default: `120000`)
+- `--llm-max-input-chars=N` (default: `18000`)
+- `--keep-temp=true|false`
+- `--temp-dir=PATH`
+
+Large markdown handling:
+
+- If MinerU markdown exceeds LLM context, MinerU-PDFHub automatically splits it into chunks.
+- Each chunk is converted independently and merged before registration.
+- Tune chunk size with `--llm-max-input-chars` (or env `MINERU_PDFHUB_LLM_MAX_INPUT_CHARS`).
 
 ### MCP Tools
 
-When connected to an MCP client, OpenContext7 provides these tools:
+When connected to an MCP client, MinerU-PDFHub provides these tools:
 
 - **`register_library`**: Register a new library with documentation
 - **`search_libraries`**: Search for libraries by name or description  
@@ -232,7 +278,7 @@ Create new user
 EOF
 
 # Register the library
-./opencontext7 register "user-api" "2.1.0" api-docs.md
+./mineru-pdfhub register "user-api" "2.1.0" api-docs.md
 ```
 
 ### Example: Using in MCP Client
@@ -240,14 +286,14 @@ EOF
 In Claude Desktop or Cursor:
 
 ```
-I need to create a Python client for our user API. Can you help me implement the authentication and user creation functionality? use opencontext7
+I need to create a Python client for our user API. Can you help me implement the authentication and user creation functionality? use mineru-pdfhub
 ```
 
 The MCP client will automatically fetch the documentation and provide accurate, up-to-date code examples.
 
 ### Inspector-Style Web UI
 
-OpenContext7 ships with an optional browser UI that mirrors MCP Inspector. Enable the HTTP (or SSE) transport in `config.yaml`, start the server, and visit `http://<host>:<port>/ui`:
+MinerU-PDFHub ships with an optional browser UI that mirrors MCP Inspector. Enable the HTTP (or SSE) transport in `config.yaml`, start the server, and visit `http://<host>:<port>/ui`:
 
 - Fill the bearer token field if `security.enableAuth` is true.
 - Use the dedicated panels to register libraries, run searches, and fetch docs.
@@ -257,26 +303,26 @@ OpenContext7 ships with an optional browser UI that mirrors MCP Inspector. Enabl
 
 ### Git Repository Sync & Auto Updates
 
-1. Enable auto-sync by setting `integration.enableAutoSync: true` in `config.yaml` (or exporting `OPENCONTEXT7_GIT_AUTOSYNC=true`). Tweak `integration.syncIntervalMinutes` to control the polling cadence.
+1. Enable auto-sync by setting `integration.enableAutoSync: true` in `config.yaml` (or exporting `MINERU_PDFHUB_GIT_AUTOSYNC=true`). Tweak `integration.syncIntervalMinutes` to control the polling cadence.
 2. Register repositories with the CLI manifest:
 
    ```bash
-   opencontext7 git add docs-api https://github.com/acme/docs.git docs/reference.md \
+   mineru-pdfhub git add docs-api https://github.com/acme/docs.git docs/reference.md \
      --branch=main --library=internal-api --version=1.0.0 --auto-sync=true
-   opencontext7 git list
+   mineru-pdfhub git list
    ```
 
-3. Manual refreshes are always available via `opencontext7 git sync` (all repos) or `opencontext7 git sync docs-api` (single repo).
-4. The Docker image exposes matching environment variables (`OPENCONTEXT7_GIT_REPOS_FILE`, `OPENCONTEXT7_GIT_DEFAULT_BRANCH`, `OPENCONTEXT7_GIT_SYNC_MINUTES`, etc.) so you can configure everything at runtime without rewriting the YAML file.
+3. Manual refreshes are always available via `mineru-pdfhub git sync` (all repos) or `mineru-pdfhub git sync docs-api` (single repo).
+4. The Docker image exposes matching environment variables (`MINERU_PDFHUB_GIT_REPOS_FILE`, `MINERU_PDFHUB_GIT_DEFAULT_BRANCH`, `MINERU_PDFHUB_GIT_SYNC_MINUTES`, etc.) so you can configure everything at runtime without rewriting the YAML file.
 
-Each sync clones/fetches the target branch, reads the designated documentation file, and registers the library. Status, commit hash, and errors surface through `opencontext7 git list` and in the HTTP/SSE logs.
+Each sync clones/fetches the target branch, reads the designated documentation file, and registers the library. Status, commit hash, and errors surface through `mineru-pdfhub git list` and in the HTTP/SSE logs.
 
 ### Fuzzy Search & Discovery
 
-The `opencontext7 search` command and the MCP `search_libraries` tool now produce ranked, typo-tolerant results with score annotations:
+The `mineru-pdfhub search` command and the MCP `search_libraries` tool now produce ranked, typo-tolerant results with score annotations:
 
 ```bash
-opencontext7 search authentication
+mineru-pdfhub search authentication
 
 # Found 3 libraries:
 #   auth-service@2.1.0 (score 184.2) - Company authentication service
@@ -290,8 +336,8 @@ The same metadata is delivered to MCP clients, enabling downstream automations t
 Use the new commands to move libraries between environments or generate offline backups:
 
 ```bash
-opencontext7 export auth-service --version=2.1.0 exports/auth-service.json
-opencontext7 import exports/auth-service.json --override=false
+mineru-pdfhub export auth-service --version=2.1.0 exports/auth-service.json
+mineru-pdfhub import exports/auth-service.json --override=false
 ```
 
 - `export` writes the exact JSON artefact stored on disk (including sections, taxonomy, and timestamps).
@@ -299,13 +345,13 @@ opencontext7 import exports/auth-service.json --override=false
 
 ### Backups & Restore
 
-Turn on the snapshotter with `backup.enableBackups: true` (or `OPENCONTEXT7_ENABLE_BACKUPS=true`). Snapshots capture the **entire** data directory—libraries, Git manifests, user stores, and indexes:
+Turn on the snapshotter with `backup.enableBackups: true` (or `MINERU_PDFHUB_ENABLE_BACKUPS=true`). Snapshots capture the **entire** data directory—libraries, Git manifests, user stores, and indexes:
 
 ```bash
-opencontext7 backup create --note="Before upgrading to 1.1"
-opencontext7 backup list
-opencontext7 backup restore snapshot-20241017T153000
-opencontext7 backup prune
+mineru-pdfhub backup create --note="Before upgrading to 1.1"
+mineru-pdfhub backup list
+mineru-pdfhub backup restore snapshot-20241017T153000
+mineru-pdfhub backup prune
 ```
 
 Retention is governed by `backup.retentionDays` and `backup.maxSnapshots`; prune runs automatically after each snapshot and can also be invoked manually.
@@ -321,12 +367,12 @@ Set `access.multiUserEnabled: true` to enforce bearer tokens across HTTP/SSE req
 Manage roles and users with the CLI:
 
 ```bash
-opencontext7 roles list
-opencontext7 roles add qa --permissions=read,backup
+mineru-pdfhub roles list
+mineru-pdfhub roles add qa --permissions=read,backup
 
-opencontext7 users add alice alice-token --role=editor --libraries=internal-api,ui-kit
-opencontext7 users list
-opencontext7 users deactivate legacy-token
+mineru-pdfhub users add alice alice-token --role=editor --libraries=internal-api,ui-kit
+mineru-pdfhub users list
+mineru-pdfhub users deactivate legacy-token
 ```
 
 - HTTP/SSE calls must present `Authorization: Bearer <token>`; tokens are stored in `users.json`.
@@ -337,15 +383,15 @@ opencontext7 users deactivate legacy-token
 The runtime image now bundles Git and honours an extended set of environment variables, making one-shot deployments simple:
 
 ```bash
-docker run -d --name opencontext7 \
-  -v /srv/opencontext7/config:/config \
-  -v /srv/opencontext7/data:/data \
-  -e OPENCONTEXT7_TRANSPORT=http \
-  -e OPENCONTEXT7_ENABLE_AUTH=true \
-  -e OPENCONTEXT7_API_KEYS=admin-token \
-  -e OPENCONTEXT7_GIT_AUTOSYNC=true \
-  -e OPENCONTEXT7_MULTI_USER=true \
-  yourregistry/opencontext7:latest
+docker run -d --name mineru-pdfhub \
+  -v /srv/mineru-pdfhub/config:/config \
+  -v /srv/mineru-pdfhub/data:/data \
+  -e MINERU_PDFHUB_TRANSPORT=http \
+  -e MINERU_PDFHUB_ENABLE_AUTH=true \
+  -e MINERU_PDFHUB_API_KEYS=admin-token \
+  -e MINERU_PDFHUB_GIT_AUTOSYNC=true \
+  -e MINERU_PDFHUB_MULTI_USER=true \
+  yourregistry/mineru-pdfhub:latest
 ```
 
 Mounting `/config` and `/data` keeps configuration, repositories, backups, and user stores persistent between container restarts.
@@ -355,10 +401,10 @@ Mounting `/config` and `/data` keeps configuration, repositories, backups, and u
 ### Repository Map
 
 ```
-mcp-opencontext7/
-├── Dockerfile                    # Multi-stage build that produces the container runtime
-├── docker-entrypoint.sh          # Container entrypoint; writes config/exports env vars
-├── opencontext7.nimble          # Nimble package manifest and dependency definition
+MinerU-PDFHub/
+├── docker/Dockerfile             # Multi-stage build that produces the container runtime
+├── docker/docker-entrypoint.sh   # Container entrypoint; writes config/exports env vars
+├── mineru_pdfhub.nimble          # Nimble package manifest and dependency definition
 ├── README.md / README_CN.md      # English & Chinese handbooks
 ├── docs/                         # Extended manuals, templates, and testing guides
 ├── examples/                     # Nim usage samples (e.g. simple_usage.nim)
@@ -367,7 +413,7 @@ mcp-opencontext7/
 │   ├── backup_manager.nim        # Snapshot creation, retention, and restore helpers
 │   ├── cli.nim                   # Administrator CLI and command parsing
 │   ├── config_manager.nim        # YAML load/save plus environment overrides
-│   ├── opencontext7.nim         # MCP server bootstrap + transport wiring
+│   ├── mineru_pdfhub.nim         # MCP server bootstrap + transport wiring
 │   ├── git_manager.nim           # Git repository manifest persistence
 │   ├── git_sync.nim              # Clone/fetch workflow and library registration
 │   ├── library_manager.nim       # Library persistence, indexing, and search
@@ -380,8 +426,8 @@ mcp-opencontext7/
 
 ### Source Module Overview
 
-- **`src/opencontext7.nim`** – Application entry point. Builds the MCP server, selects transports (stdio/HTTP/SSE), performs authentication, and coordinates Git/backup/access subsystems.
-- **`src/cli.nim`** – Provides the `opencontext7` CLI. Supports library CRUD, Git sync management, import/export, backup orchestration, and multi-user administration.
+- **`src/mineru_pdfhub.nim`** – Application entry point. Builds the MCP server, selects transports (stdio/HTTP/SSE), performs authentication, and coordinates Git/backup/access subsystems.
+- **`src/cli.nim`** – Provides the `mineru-pdfhub` CLI. Supports library CRUD, Git sync management, import/export, backup orchestration, and multi-user administration.
 - **`src/config_manager.nim`** – Loads and saves YAML configuration, merges environment overrides, and exposes strongly typed settings for other modules.
 - **`src/library_manager.nim`** – Manages library registration, versioning, section extraction, fuzzy search scoring, JSON persistence, and import/export helpers.
 - **`src/mcp_tools.nim`** – Implements the MCP tools (`register_library`, `search_libraries`, `get_library_docs`) used by LLM clients, including payload validation and fuzzy search integration.
@@ -418,7 +464,7 @@ All transports share the same authentication helpers and dispatcher logic, so fe
 
 ## ⚙️ Configuration
 
-Configuration file location: `~/.opencontext7/config.yaml`
+Configuration file location: `~/.mineru-pdfhub/config.yaml`
 
 ```yaml
 server:
@@ -427,7 +473,7 @@ server:
   transport: stdio  # stdio, http, sse
 
 storage:
-  dataDir: ~/.opencontext7/data
+  dataDir: ~/.mineru-pdfhub/data
   maxLibraries: 1000
   maxDocSize: 10485760  # 10MB
 
@@ -438,21 +484,21 @@ security:
 
 integration:
   enableAutoSync: false
-  reposFile: ~/.opencontext7/git_repos.json
+  reposFile: ~/.mineru-pdfhub/git_repos.json
   defaultBranch: main
   syncIntervalMinutes: 15
   autoBootstrap: true
 
 backup:
   enableBackups: false
-  backupDir: ~/.opencontext7/backups
+  backupDir: ~/.mineru-pdfhub/backups
   retentionDays: 7
   maxSnapshots: 10
 
 access:
   multiUserEnabled: false
-  usersFile: ~/.opencontext7/users.json
-  rolesFile: ~/.opencontext7/roles.json
+  usersFile: ~/.mineru-pdfhub/users.json
+  rolesFile: ~/.mineru-pdfhub/roles.json
   defaultRole: viewer
   enforceLibraryScope: false
 ```
@@ -467,15 +513,15 @@ access:
 
 ```bash
 # Use custom config file
-./opencontext7 --config=/path/to/config.yaml server
+./mineru-pdfhub --config=/path/to/config.yaml server
 
 # Use custom data directory
-./opencontext7 --data-dir=/custom/path list
+./mineru-pdfhub --data-dir=/custom/path list
 ```
 
 ## 🏗️ Architecture
 
-OpenContext7 is built on:
+MinerU-PDFHub is built on:
 
 - **MCP Nim SDK**: For Model Context Protocol implementation
 - **Async Architecture**: Non-blocking operations using Nim's asyncdispatch
@@ -526,7 +572,7 @@ nim c -r examples/simple_usage.nim
 
 ### Test Coverage
 
-OpenContext7 maintains **100% test coverage** across all modules:
+MinerU-PDFHub maintains **100% test coverage** across all modules:
 
 - **8 comprehensive test suites** covering all functionality
 - **500+ individual test cases** including edge cases and error conditions
@@ -572,9 +618,9 @@ See [docs/TESTING.md](docs/TESTING.md) for detailed testing information.
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🆚 OpenContext7 vs Context7 SaaS
+## 🆚 MinerU-PDFHub vs Context7 SaaS
 
-| Feature | OpenContext7 | OpenContext7 SaaS |
+| Feature | MinerU-PDFHub | MinerU-PDFHub SaaS |
 |---------|----------------|---------------|
 | **Hosting** | Self-hosted | Cloud-hosted |
 | **Privacy** | Fully private | Public libraries only |

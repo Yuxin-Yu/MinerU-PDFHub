@@ -47,6 +47,13 @@ type
 const
   SearchTokenDelimiters = {' ', '\t', '\n', '\r', ',', '.', ';', ':', '/', '\\', '-', '_', '(', ')', '[', ']', '{', '}', '"', '\'', '|', '+', '&', '?', '!', '#'}
 
+proc containsAtBoundary(text, substr: string): bool =
+  let idx = text.find(substr)
+  if idx < 0:
+    return false
+  let before = if idx == 0: '\0' else: text[idx-1]
+  before in {'\0', '-', '_', '.', ' ', '/', '\\', ':'} or idx == 0
+
 proc tokenizeLower(text: string): seq[string] =
   for part in text.toLowerAscii().split(SearchTokenDelimiters):
     let token = part.strip()
@@ -107,11 +114,11 @@ proc computeLibraryMatch(library: Library, queryLower: string, queryTokens: seq[
     elif nameLower.startsWith(queryLower):
       total += 80.0
       addReason(reasons, "name starts with query")
-    elif nameLower.contains(queryLower):
+    elif nameLower.contains(queryLower) and containsAtBoundary(nameLower, queryLower):
       total += 60.0
       addReason(reasons, "name contains query")
     let nameSim = normalizedSimilarity(queryLower, nameLower)
-    if nameSim > 0.0:
+    if nameSim >= 0.5:
       total += nameSim * 70.0
       addReason(reasons, "name similarity " & formatFloat(nameSim * 100.0, ffDecimal, 1) & "%")
     for tag in tagsLower:
@@ -146,20 +153,20 @@ proc computeLibraryMatch(library: Library, queryLower: string, queryTokens: seq[
         if sim > bestScore:
           bestScore = sim
           bestLabel = "tag '" & tag & "'"
-    if bestScore < 0.85 and descriptionLower.len > 0 and descriptionLower.contains(token):
+    if bestScore < 0.85 and descriptionLower.len > 0 and containsAtBoundary(descriptionLower, token):
       bestScore = max(bestScore, 0.85)
       bestLabel = "description"
     if bestScore > 0.0:
       total += bestScore * 35.0
       addReason(reasons, "matched " & bestLabel)
 
-  if descriptionLower.len > 0 and queryLower.len > 0 and descriptionLower.contains(queryLower):
+  if descriptionLower.len > 0 and queryLower.len > 0 and containsAtBoundary(descriptionLower, queryLower):
     total += 12.0
     addReason(reasons, "description contains query")
 
   if tagsLower.len > 0 and queryLower.len > 0:
     for tag in tagsLower:
-      if tag.len > queryLower.len and tag.contains(queryLower):
+      if tag.len > queryLower.len and containsAtBoundary(tag, queryLower):
         total += 18.0
         addReason(reasons, "tag contains query")
         break

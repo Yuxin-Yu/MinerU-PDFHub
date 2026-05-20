@@ -1,10 +1,10 @@
-# OpenContext7
+# MinerU-PDFHub
 
 [![Nim](https://img.shields.io/badge/Nim-2.0%2B-blue)](https://nim-lang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-green)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-OpenContext7 是一个本地部署的 MCP（模型上下文协议）服务器，用于管理和提供私有/内部库的文档。它为基于云的文档服务提供了一个安全的自托管替代方案，非常适合需要保持专有库文档内部化的组织。
+MinerU-PDFHub 是一个本地部署的 MCP（模型上下文协议）服务器，用于管理和提供私有/内部库的文档。它为基于云的文档服务提供了一个安全的自托管替代方案，非常适合需要保持专有库文档内部化的组织。
 
 👉 想阅读英文版？请访问 [English README](README.md)。
 
@@ -27,18 +27,18 @@ OpenContext7 是一个本地部署的 MCP（模型上下文协议）服务器，
 - [📚 典型场景](#-典型场景)
 - [🤝 参与贡献](#-参与贡献)
 - [📄 许可协议](#-许可协议)
-- [🆚 OpenContext7 vs Context7 SaaS](#-opencontext7-vs-context7-saas)
+- [🆚 MinerU-PDFHub vs Context7 SaaS](#-mineru-pdfhub-vs-context7-saas)
 - [🚀 Roadmap](#-roadmap)
 
 ## 🧭 项目概述
 
-OpenContext7 将每个库以结构化 JSON 存储，并记录三级标题、带语言标签的代码段以及主题匹配索引。服务器兼容 MCP 工具、命令行与 HTTP/SSE 传输，可在完全内网环境中为 LLM 提供专有文档。
+MinerU-PDFHub 将每个库以结构化 JSON 存储，并记录三级标题、带语言标签的代码段以及主题匹配索引。服务器兼容 MCP 工具、命令行与 HTTP/SSE 传输，可在完全内网环境中为 LLM 提供专有文档。
 
 ## 🚀 功能特性
 
 - **私有库管理**：注册和管理内部库文档，内置三级标题与代码段提取
 - **知识感知检索**：`get_library_docs` 支持主题词优先级及文字/结构/语义三种匹配算法
-- **代码段统计**：每个库自动统计代码样例数量，`opencontext7 list` 可直接查看
+- **代码段统计**：每个库自动统计代码样例数量，`mineru-pdfhub list` 可直接查看
 - **Inspector 风格 Web UI**：可选浏览器界面（借鉴 MCP Inspector），为每个 MCP 工具提供按钮、支持 Bearer Token、实时展示返回结果
 - **MCP 协议支持**：兼容 Claude Desktop、Cursor 和其他 MCP 客户端
 - **Git 自动同步**：跟踪远程仓库并在拉取后自动刷新库文档
@@ -61,8 +61,8 @@ OpenContext7 将每个库以结构化 JSON 存储，并记录三级标题、带�
 ### 从源码安装
 
 ```bash
-git clone https://github.com/yourorg/opencontext7.git
-cd opencontext7
+git clone https://github.com/yourorg/mineru-pdfhub.git
+cd mineru-pdfhub
 nimble install
 ```
 
@@ -83,31 +83,31 @@ docker build \
   --build-arg VERSION=$(git describe --tags --always) \
   --build-arg VCS_REF=$(git rev-parse HEAD) \
   --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  -t opencontext7:latest .
+  -t mineru-pdfhub:latest .
 ```
 
-> 镜像默认使用非 root 的 `opencontext7` 用户（UID/GID=1000）。如需对齐宿主机权限，可通过 `--build-arg APP_UID=... APP_GID=...` 修改，或确保挂载目录对该 UID 可写。
+> 镜像默认使用非 root 的 `mineru-pdfhub` 用户（UID/GID=1000）。如需对齐宿主机权限，可通过 `--build-arg APP_UID=... APP_GID=...` 修改，或确保挂载目录对该 UID 可写。
 
 使用具名卷持久化配置与数据：
 
 ```bash
-docker run -d --name opencontext7 \
+docker run -d --name mineru-pdfhub \
   -p 8080:8080 \
-  -v opencontext7-config:/config \
-  -v opencontext7-data:/data \
-  -e OPENCONTEXT7_TRANSPORT=http \
-  -e OPENCONTEXT7_ENABLE_AUTH=false \
-  opencontext7:latest
+  -v mineru-pdfhub-config:/config \
+  -v mineru-pdfhub-data:/data \
+  -e MINERU_PDFHUB_TRANSPORT=http \
+  -e MINERU_PDFHUB_ENABLE_AUTH=false \
+  mineru-pdfhub:latest
 ```
 
 `docker-entrypoint.sh` 会在第一次启动时自动生成 `/config/config.yaml`。所有配置均可通过环境变量注入，常用项包括：
 
-- `OPENCONTEXT7_CONFIG_DIR` / `OPENCONTEXT7_DATA_DIR`
-- `OPENCONTEXT7_HOST` / `OPENCONTEXT7_PORT` / `OPENCONTEXT7_TRANSPORT`
-- `OPENCONTEXT7_API_KEYS`（逗号分隔）与 `OPENCONTEXT7_ALLOWED_IPS`
-- `OPENCONTEXT7_GIT_AUTOSYNC`、`OPENCONTEXT7_GIT_REPOS_FILE`、`OPENCONTEXT7_GIT_SYNC_MINUTES`
-- `OPENCONTEXT7_ENABLE_BACKUPS`、`OPENCONTEXT7_BACKUP_DIR`
-- `OPENCONTEXT7_MULTI_USER`、`OPENCONTEXT7_USERS_FILE`、`OPENCONTEXT7_ROLES_FILE`
+- `MINERU_PDFHUB_CONFIG_DIR` / `MINERU_PDFHUB_DATA_DIR`
+- `MINERU_PDFHUB_HOST` / `MINERU_PDFHUB_PORT` / `MINERU_PDFHUB_TRANSPORT`
+- `MINERU_PDFHUB_API_KEYS`（逗号分隔）与 `MINERU_PDFHUB_ALLOWED_IPS`
+- `MINERU_PDFHUB_GIT_AUTOSYNC`、`MINERU_PDFHUB_GIT_REPOS_FILE`、`MINERU_PDFHUB_GIT_SYNC_MINUTES`
+- `MINERU_PDFHUB_ENABLE_BACKUPS`、`MINERU_PDFHUB_BACKUP_DIR`
+- `MINERU_PDFHUB_MULTI_USER`、`MINERU_PDFHUB_USERS_FILE`、`MINERU_PDFHUB_ROLES_FILE`
 
 运行容器时，通过 `-e 变量=值` 即可覆盖 `docker-entrypoint.sh` 中列出的全部环境变量。
 
@@ -116,10 +116,10 @@ docker run -d --name opencontext7 \
 ### 1. 初始化配置
 
 ```bash
-./opencontext7 init
+./mineru-pdfhub init
 ```
 
-这将在 `~/.opencontext7/config.yaml` 创建默认配置文件。
+这将在 `~/.mineru-pdfhub/config.yaml` 创建默认配置文件。
 
 ### 2. 注册第一个库
 
@@ -128,16 +128,21 @@ docker run -d --name opencontext7 \
 echo "# 我的内部 API\n\n这是我们的内部 REST API..." > my-api-docs.md
 
 # 注册库
-./opencontext7 register "my-internal-api" "1.0.0" my-api-docs.md
+./mineru-pdfhub register "my-internal-api" "1.0.0" my-api-docs.md
+
+# 直接从 PDF 注册（MinerU + OpenAI 兼容 LLM）
+./mineru-pdfhub register-pdf "my-internal-api-pdf" "1.0.0" ./docs/api.pdf \
+  --llm-base-url=http://127.0.0.1:11434/v1 \
+  --llm-model=qwen2.5:14b
 ```
 
 ### 3. 启动 MCP 服务器
 
 ```bash
-./opencontext7 server
+./mineru-pdfhub server
 ```
 
-- 想使用 Web UI？在 `~/.opencontext7/config.yaml` 中将 `server.transport` 设置为 `http`（或 `sse`），重启服务器，然后访问 `http://<host>:<port>/ui`。
+- 想使用 Web UI？在 `~/.mineru-pdfhub/config.yaml` 中将 `server.transport` 设置为 `http`（或 `sse`），重启服务器，然后访问 `http://<host>:<port>/ui`。
 
 ### 4. 配置 MCP 客户端
 
@@ -146,8 +151,8 @@ echo "# 我的内部 API\n\n这是我们的内部 REST API..." > my-api-docs.md
 ```json
 {
   "mcpServers": {
-    "opencontext7": {
-      "command": "/path/to/opencontext7",
+    "mineru-pdfhub": {
+      "command": "/path/to/mineru-pdfhub",
       "args": ["server"]
     }
   }
@@ -157,7 +162,7 @@ echo "# 我的内部 API\n\n这是我们的内部 REST API..." > my-api-docs.md
 ### 5. 在提示中使用
 
 ```
-为我们的内部用户服务创建一个 REST API 客户端。使用 opencontext7 获取 API 文档。
+为我们的内部用户服务创建一个 REST API 客户端。使用 mineru-pdfhub 获取 API 文档。
 ```
 
 ## 📖 使用指南
@@ -166,42 +171,83 @@ echo "# 我的内部 API\n\n这是我们的内部 REST API..." > my-api-docs.md
 
 ```bash
 # 服务器管理
-opencontext7 server                    # 启动 MCP 服务器
-opencontext7 init                      # 初始化配置
+mineru-pdfhub server                    # 启动 MCP 服务器
+mineru-pdfhub init                      # 初始化配置
 
 # 库管理  
-opencontext7 register <name> <version> <docs_file>  # 注册库
-opencontext7 list                      # 列出所有库
-opencontext7 search <query>            # 搜索库
-opencontext7 get <name> [version]      # 获取库文档
-opencontext7 delete <name> [version]   # 删除库
+mineru-pdfhub register <name> <version> <docs_file>  # 注册库
+mineru-pdfhub register-pdf <name> <version> <pdf_file> [opts] # PDF -> MinerU -> LLM -> 注册
+mineru-pdfhub list                      # 列出所有库
+mineru-pdfhub search <query>            # 搜索库
+mineru-pdfhub get <name> [version]      # 获取库文档
+mineru-pdfhub delete <name> [version]   # 删除库
 
 # 导入导出
-opencontext7 export <name> [--version=VER] <file>   # 导出库为 JSON
-opencontext7 import <file> [--override=true]        # 从 JSON 导入库
+mineru-pdfhub export <name> [--version=VER] <file>   # 导出库为 JSON
+mineru-pdfhub import <file> [--override=true]        # 从 JSON 导入库
 
 # Git 集成
-opencontext7 git list                  # 查看已配置仓库
-opencontext7 git add <id> <url> <docs_path> [opts]
-opencontext7 git sync [id]             # 手动触发同步
+mineru-pdfhub git list                  # 查看已配置仓库
+mineru-pdfhub git add <id> <url> <docs_path> [opts]
+mineru-pdfhub git sync [id]             # 手动触发同步
 
 # 备份
-opencontext7 backup list               # 查看快照
-opencontext7 backup create [--note=...]# 创建压缩快照
-opencontext7 backup restore <id>       # 恢复快照（覆盖数据目录）
-opencontext7 backup prune              # 执行保留策略
+mineru-pdfhub backup list               # 查看快照
+mineru-pdfhub backup create [--note=...]# 创建压缩快照
+mineru-pdfhub backup restore <id>       # 恢复快照（覆盖数据目录）
+mineru-pdfhub backup prune              # 执行保留策略
 
 # 权限管理
-opencontext7 users list|add|remove|deactivate|activate ...
-opencontext7 roles list|add|remove ...
+mineru-pdfhub users list|add|remove|deactivate|activate ...
+mineru-pdfhub roles list|add|remove ...
 
 # 配置
-opencontext7 config                    # 显示当前配置
+mineru-pdfhub config                    # 显示当前配置
 ```
+
+`register-pdf` 支持 `--mineru-cmd`、`--mineru-backend`、`--mineru-method`、`--llm-base-url`、`--llm-api-key`、`--llm-model`、`--llm-timeout-ms`、`--llm-max-input-chars`、`--keep-temp`、`--temp-dir`。  
+也可通过环境变量配置：`MINERU_PDFHUB_LLM_BASE_URL`、`MINERU_PDFHUB_LLM_API_KEY`、`MINERU_PDFHUB_LLM_MODEL`、`MINERU_PDFHUB_LLM_MAX_INPUT_CHARS`。
+
+### PDF 注册流水线（`register-pdf`）
+
+`register-pdf` 将 MinerU 与 OpenAI 兼容 LLM 串成一个命令：
+
+1. 使用 MinerU 解析 PDF 并生成 Markdown  
+2. 使用 LLM 将 Markdown 规范化为更适合 MinerU-PDFHub 检索的结构  
+3. 复用现有注册流程完成入库
+
+示例：
+
+```bash
+mineru-pdfhub register-pdf "chip-docs" "1.0.0" ./specs/chip.pdf \
+  --llm-base-url=http://127.0.0.1:11434/v1 \
+  --llm-model=qwen2.5:14b \
+  --llm-max-input-chars=18000
+```
+
+常用参数：
+
+- `--description=TEXT`
+- `--mineru-cmd=CMD`（默认：`mineru`）
+- `--mineru-backend=BACKEND`（默认：`pipeline`）
+- `--mineru-method=METHOD`（默认：`auto`）
+- `--llm-base-url=URL`
+- `--llm-api-key=KEY`
+- `--llm-model=MODEL`
+- `--llm-timeout-ms=N`（默认：`120000`）
+- `--llm-max-input-chars=N`（默认：`18000`）
+- `--keep-temp=true|false`
+- `--temp-dir=PATH`
+
+大文档分片机制：
+
+- 当 MinerU 产出的 Markdown 超出单次 LLM 上下文时，MinerU-PDFHub 会自动分片。
+- 每个分片独立转换后合并，再执行注册。
+- 可通过 `--llm-max-input-chars`（或环境变量 `MINERU_PDFHUB_LLM_MAX_INPUT_CHARS`）调整分片大小。
 
 ### MCP 工具
 
-当连接到 MCP 客户端时，OpenContext7 提供以下工具：
+当连接到 MCP 客户端时，MinerU-PDFHub 提供以下工具：
 
 - **`register_library`**：注册带有文档的新库
 - **`search_libraries`**：按名称或描述搜索库
@@ -234,7 +280,7 @@ Authorization: Bearer <your-token>
 EOF
 
 # 注册库
-./opencontext7 register "user-api" "2.1.0" api-docs.md
+./mineru-pdfhub register "user-api" "2.1.0" api-docs.md
 ```
 
 ### 示例：在 MCP 客户端中使用
@@ -242,14 +288,14 @@ EOF
 在 Claude Desktop 或 Cursor 中：
 
 ```
-我需要为我们的用户 API 创建一个 Python 客户端。你能帮我实现认证和用户创建功能吗？使用 opencontext7
+我需要为我们的用户 API 创建一个 Python 客户端。你能帮我实现认证和用户创建功能吗？使用 mineru-pdfhub
 ```
 
 MCP 客户端将自动获取文档并提供准确、最新的代码示例。
 
 ### Inspector 风格 Web UI
 
-OpenContext7 内置了一套 MCP Inspector 风格的浏览器界面。启用 HTTP（或 SSE）传输后，启动服务器并访问 `http://<host>:<port>/ui`：
+MinerU-PDFHub 内置了一套 MCP Inspector 风格的浏览器界面。启用 HTTP（或 SSE）传输后，启动服务器并访问 `http://<host>:<port>/ui`：
 
 - 若 `security.enableAuth` 为 true，可在界面顶部填写 Bearer Token。
 - 使用各功能面板按钮即可注册库、执行搜索或获取文档。
@@ -259,26 +305,26 @@ OpenContext7 内置了一套 MCP Inspector 风格的浏览器界面。启用 HTT
 
 ### Git 仓库同步与自动更新
 
-1. 在 `config.yaml` 中将 `integration.enableAutoSync` 设置为 `true`（或通过 `OPENCONTEXT7_GIT_AUTOSYNC=true` 环境变量）。可用 `integration.syncIntervalMinutes` 调整轮询间隔。
+1. 在 `config.yaml` 中将 `integration.enableAutoSync` 设置为 `true`（或通过 `MINERU_PDFHUB_GIT_AUTOSYNC=true` 环境变量）。可用 `integration.syncIntervalMinutes` 调整轮询间隔。
 2. 使用 CLI 维护仓库清单：
 
    ```bash
-   opencontext7 git add docs-api https://github.com/acme/docs.git docs/reference.md \
+   mineru-pdfhub git add docs-api https://github.com/acme/docs.git docs/reference.md \
      --branch=main --library=internal-api --version=1.0.0 --auto-sync=true
-   opencontext7 git list
+   mineru-pdfhub git list
    ```
 
-3. 随时通过 `opencontext7 git sync`（全部）或 `opencontext7 git sync docs-api`（指定仓库）手动触发同步。
-4. Docker 镜像同样支持 `OPENCONTEXT7_GIT_REPOS_FILE`、`OPENCONTEXT7_GIT_SYNC_MINUTES` 等环境变量，部署时即可注入配置。
+3. 随时通过 `mineru-pdfhub git sync`（全部）或 `mineru-pdfhub git sync docs-api`（指定仓库）手动触发同步。
+4. Docker 镜像同样支持 `MINERU_PDFHUB_GIT_REPOS_FILE`、`MINERU_PDFHUB_GIT_SYNC_MINUTES` 等环境变量，部署时即可注入配置。
 
 每次同步会 clone/fetch 指定分支、读取文档并重新注册库，CLI 与 HTTP/SSE 日志中会展示最新提交哈希与状态。
 
 ### 模糊搜索与结果解释
 
-`opencontext7 search` 和 MCP `search_libraries` 工具现在会输出带分数和匹配理由的排序结果：
+`mineru-pdfhub search` 和 MCP `search_libraries` 工具现在会输出带分数和匹配理由的排序结果：
 
 ```bash
-opencontext7 search authentication
+mineru-pdfhub search authentication
 
 # Found 3 libraries:
 #   auth-service@2.1.0 (score 184.2) - 公司认证服务
@@ -292,8 +338,8 @@ opencontext7 search authentication
 通过 JSON 快速迁移或备份：
 
 ```bash
-opencontext7 export auth-service --version=2.1.0 exports/auth-service.json
-opencontext7 import exports/auth-service.json --override=false
+mineru-pdfhub export auth-service --version=2.1.0 exports/auth-service.json
+mineru-pdfhub import exports/auth-service.json --override=false
 ```
 
 - `export` 会输出包含章节、分类、时间戳的原始 JSON。
@@ -301,13 +347,13 @@ opencontext7 import exports/auth-service.json --override=false
 
 ### 备份与恢复
 
-启用 `backup.enableBackups: true`（或 `OPENCONTEXT7_ENABLE_BACKUPS=true`）后即可使用快照功能：
+启用 `backup.enableBackups: true`（或 `MINERU_PDFHUB_ENABLE_BACKUPS=true`）后即可使用快照功能：
 
 ```bash
-opencontext7 backup create --note="升级前快照"
-opencontext7 backup list
-opencontext7 backup restore snapshot-20241017T153000
-opencontext7 backup prune
+mineru-pdfhub backup create --note="升级前快照"
+mineru-pdfhub backup list
+mineru-pdfhub backup restore snapshot-20241017T153000
+mineru-pdfhub backup prune
 ```
 
 快照为压缩 tar 包，包含所有数据目录内容。`backup.retentionDays` 与 `backup.maxSnapshots` 用于控制保留策略。
@@ -323,12 +369,12 @@ opencontext7 backup prune
 通过 CLI 管理角色与用户：
 
 ```bash
-opencontext7 roles list
-opencontext7 roles add qa --permissions=read,backup
+mineru-pdfhub roles list
+mineru-pdfhub roles add qa --permissions=read,backup
 
-opencontext7 users add alice alice-token --role=editor --libraries=internal-api,ui-kit
-opencontext7 users list
-opencontext7 users deactivate legacy-token
+mineru-pdfhub users add alice alice-token --role=editor --libraries=internal-api,ui-kit
+mineru-pdfhub users list
+mineru-pdfhub users deactivate legacy-token
 ```
 
 - CLI 会生成/更新 `roles.json` 与 `users.json`，默认存放在配置目录。
@@ -339,15 +385,15 @@ opencontext7 users deactivate legacy-token
 运行时镜像内置 Git，并支持丰富的环境变量，适合一次性部署：
 
 ```bash
-docker run -d --name opencontext7 \
-  -v /srv/opencontext7/config:/config \
-  -v /srv/opencontext7/data:/data \
-  -e OPENCONTEXT7_TRANSPORT=http \
-  -e OPENCONTEXT7_ENABLE_AUTH=true \
-  -e OPENCONTEXT7_API_KEYS=admin-token \
-  -e OPENCONTEXT7_GIT_AUTOSYNC=true \
-  -e OPENCONTEXT7_MULTI_USER=true \
-  yourregistry/opencontext7:latest
+docker run -d --name mineru-pdfhub \
+  -v /srv/mineru-pdfhub/config:/config \
+  -v /srv/mineru-pdfhub/data:/data \
+  -e MINERU_PDFHUB_TRANSPORT=http \
+  -e MINERU_PDFHUB_ENABLE_AUTH=true \
+  -e MINERU_PDFHUB_API_KEYS=admin-token \
+  -e MINERU_PDFHUB_GIT_AUTOSYNC=true \
+  -e MINERU_PDFHUB_MULTI_USER=true \
+  yourregistry/mineru-pdfhub:latest
 ```
 
 挂载 `/config` 与 `/data` 可保证配置、仓库清单、备份以及权限数据在容器重启后仍可用。
@@ -357,10 +403,10 @@ docker run -d --name opencontext7 \
 ### 仓库总览
 
 ```
-mcp-opencontext7/
-├── Dockerfile                    # 多阶段构建脚本，产出最终运行镜像
-├── docker-entrypoint.sh          # 容器入口，生成配置并导出环境变量
-├── opencontext7.nimble          # Nimble 包描述文件
+MinerU-PDFHub/
+├── docker/Dockerfile             # 多阶段构建脚本，产出最终运行镜像
+├── docker/docker-entrypoint.sh   # 容器入口，生成配置并导出环境变量
+├── mineru_pdfhub.nimble          # Nimble 包描述文件
 ├── README.md / README_CN.md      # 英文 / 中文使用手册
 ├── docs/                         # 扩展文档与模板
 ├── examples/                     # 使用示例（如 simple_usage.nim）
@@ -369,7 +415,7 @@ mcp-opencontext7/
 │   ├── backup_manager.nim        # 备份创建、保留与恢复
 │   ├── cli.nim                   # 管理员 CLI 与命令解析
 │   ├── config_manager.nim        # YAML 配置读写与环境变量覆盖
-│   ├── opencontext7.nim         # MCP 服务器入口与传输配置
+│   ├── mineru_pdfhub.nim         # MCP 服务器入口与传输配置
 │   ├── git_manager.nim           # Git 仓库清单持久化
 │   ├── git_sync.nim              # 仓库 clone/fetch 及库自动注册
 │   ├── library_manager.nim       # 库注册、版本管理与模糊搜索
@@ -382,8 +428,8 @@ mcp-opencontext7/
 
 ### 源代码模块说明
 
-- **`src/opencontext7.nim`**：应用入口。创建 MCP 服务器、选择传输模式（stdio/HTTP/SSE）、执行认证，并协调 Git/备份/权限子系统。
-- **`src/cli.nim`**：提供 `opencontext7` 命令，覆盖库管理、Git 同步、导入导出、备份操作及多用户管理。
+- **`src/mineru_pdfhub.nim`**：应用入口。创建 MCP 服务器、选择传输模式（stdio/HTTP/SSE）、执行认证，并协调 Git/备份/权限子系统。
+- **`src/cli.nim`**：提供 `mineru-pdfhub` 命令，覆盖库管理、Git 同步、导入导出、备份操作及多用户管理。
 - **`src/config_manager.nim`**：负责 YAML 配置读写，合并环境变量，输出强类型配置对象。
 - **`src/library_manager.nim`**：管理库的注册、版本、章节提取、模糊搜索评分、JSON 持久化，以及导入导出。
 - **`src/mcp_tools.nim`**：实现 `register_library`、`search_libraries`、`get_library_docs` 三个 MCP 工具，含参数校验与模糊检索。
@@ -413,7 +459,7 @@ mcp-opencontext7/
 
 ## ⚙️ 配置
 
-配置文件位置：`~/.opencontext7/config.yaml`
+配置文件位置：`~/.mineru-pdfhub/config.yaml`
 
 ```yaml
 server:
@@ -422,7 +468,7 @@ server:
   transport: stdio  # stdio, http, sse
 
 storage:
-  dataDir: ~/.opencontext7/data
+  dataDir: ~/.mineru-pdfhub/data
   maxLibraries: 1000
   maxDocSize: 10485760  # 10MB
 
@@ -433,21 +479,21 @@ security:
 
 integration:
   enableAutoSync: false
-  reposFile: ~/.opencontext7/git_repos.json
+  reposFile: ~/.mineru-pdfhub/git_repos.json
   defaultBranch: main
   syncIntervalMinutes: 15
   autoBootstrap: true
 
 backup:
   enableBackups: false
-  backupDir: ~/.opencontext7/backups
+  backupDir: ~/.mineru-pdfhub/backups
   retentionDays: 7
   maxSnapshots: 10
 
 access:
   multiUserEnabled: false
-  usersFile: ~/.opencontext7/users.json
-  rolesFile: ~/.opencontext7/roles.json
+  usersFile: ~/.mineru-pdfhub/users.json
+  rolesFile: ~/.mineru-pdfhub/roles.json
   defaultRole: viewer
   enforceLibraryScope: false
 ```
@@ -462,15 +508,15 @@ access:
 
 ```bash
 # 使用自定义配置文件
-./opencontext7 --config=/path/to/config.yaml server
+./mineru-pdfhub --config=/path/to/config.yaml server
 
 # 使用自定义数据目录
-./opencontext7 --data-dir=/custom/path list
+./mineru-pdfhub --data-dir=/custom/path list
 ```
 
 ## 🏗️ 架构
 
-OpenContext7 构建于：
+MinerU-PDFHub 构建于：
 
 - **MCP Nim SDK**：用于模型上下文协议实现
 - **异步架构**：使用 Nim 的 asyncdispatch 进行非阻塞操作
@@ -521,7 +567,7 @@ nim c -r examples/simple_usage.nim
 
 ### 测试覆盖率
 
-OpenContext7 在所有模块中保持 **100% 测试覆盖率**：
+MinerU-PDFHub 在所有模块中保持 **100% 测试覆盖率**：
 
 - **8 个全面测试套件** 覆盖所有功能
 - **500+ 个独立测试用例** 包括边界情况和错误条件
@@ -567,9 +613,9 @@ OpenContext7 在所有模块中保持 **100% 测试覆盖率**：
 
 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
 
-## 🆚 OpenContext7 vs Context7 SaaS
+## 🆚 MinerU-PDFHub vs Context7 SaaS
 
-| 功能 | OpenContext7 | OpenContext7 SaaS |
+| 功能 | MinerU-PDFHub | MinerU-PDFHub SaaS |
 |------|----------------|---------------|
 | **托管方式** | 自托管 | 云托管 |
 | **隐私性** | 完全私有 | 仅公共库 |

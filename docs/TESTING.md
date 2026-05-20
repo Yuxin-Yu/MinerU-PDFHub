@@ -1,10 +1,10 @@
 # Testing Guide
 
-This document provides comprehensive information about the testing strategy and coverage for OpenContext7.
+This document provides comprehensive information about the testing strategy and coverage for MinerU-PDFHub.
 
 ## Test Coverage Target: 100%
 
-OpenContext7 aims for 100% test coverage across all modules to ensure reliability and maintainability.
+MinerU-PDFHub aims for 100% test coverage across all modules to ensure reliability and maintainability.
 
 ## Test Structure
 
@@ -34,7 +34,7 @@ OpenContext7 aims for 100% test coverage across all modules to ensure reliabilit
    - Integration with library manager
    - Error handling
 
-5. **MCP Server Tests** (`test_opencontext7_server.nim`)
+5. **MCP Server Tests** (`test_mineru_pdfhub_server.nim`)
    - MCP protocol implementation
    - Tool handler simulation
    - Resource management
@@ -82,7 +82,7 @@ nimble test_verbose
 nim c -r tests/test_library_manager_comprehensive.nim
 nim c -r tests/test_config_manager.nim
 nim c -r tests/test_cli.nim
-nim c -r tests/test_opencontext7_server.nim
+nim c -r tests/test_mineru_pdfhub_server.nim
 nim c -r tests/test_mcp_helpers.nim
 nim c -r tests/test_error_handling.nim
 nim c -r tests/test_integration.nim
@@ -197,7 +197,7 @@ nim c --lineTrace:on --debugger:native -r tests/test_all.nim
 ### Temporary Directories
 
 All tests use temporary directories to avoid conflicts:
-- Base directory: `/tmp/opencontext7_*_test`
+- Base directory: `/tmp/mineru_pdfhub_*_test`
 - Automatic cleanup in teardown
 - Isolated test environments
 
@@ -339,4 +339,4 @@ nim c -r tests/test_name.nim --verbose
 
 ## Conclusion
 
-The OpenContext7 test suite provides comprehensive coverage of all functionality, ensuring reliability and maintainability. The combination of unit tests, integration tests, and error handling tests achieves the target of 100% coverage while maintaining fast execution times and clear test organization.
+The MinerU-PDFHub test suite provides comprehensive coverage of all functionality, ensuring reliability and maintainability. The combination of unit tests, integration tests, and error handling tests achieves the target of 100% coverage while maintaining fast execution times and clear test organization.

@@ -1,5 +1,5 @@
 import std/[unittest, asyncdispatch, asyncnet, httpclient, os, strutils, json, times, httpcore]
-import ../src/[opencontext7, library_manager, mcp_tools, config_manager]
+import ../src/[mineru_pdfhub, library_manager, mcp_tools, config_manager]
 
 proc makeTempDir(prefix: string): string =
   let base = getTempDir()
@@ -24,7 +24,7 @@ proc assertContains(node: JsonNode, expected: string) =
   doAssert expected in text, "Expected '" & expected & "' in response: " & text
 
 proc runHttpTransportTest() {.async.} =
-  let tempDir = makeTempDir("opencontext7_http_")
+  let tempDir = makeTempDir("mineru_pdfhub_http_")
   defer:
     cleanupDir(tempDir)
 
@@ -97,7 +97,7 @@ proc readSseEvent(sock: AsyncSocket): Future[(string, string)] {.async.} =
       dataLines.add(line)
 
 proc runSseTransportTest() {.async.} =
-  let tempDir = makeTempDir("opencontext7_sse_")
+  let tempDir = makeTempDir("mineru_pdfhub_sse_")
   defer:
     cleanupDir(tempDir)
 
@@ -198,7 +198,7 @@ proc runSseTransportTest() {.async.} =
 
 suite "Transport mode tool tests":
   test "STDIO tools":
-    let tempDir = makeTempDir("opencontext7_stdio_")
+    let tempDir = makeTempDir("mineru_pdfhub_stdio_")
     defer:
       cleanupDir(tempDir)
     let manager = newLibraryManager(tempDir)
